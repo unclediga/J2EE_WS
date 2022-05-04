@@ -18,19 +18,24 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.RuntimeDelegate;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
 
 public class BookServiceIT  {
 
-  private static InetSocketAddress uri = new InetSocketAddress(8282);
+  private static URI uri = UriBuilder.fromUri("http://localhost/").port(8282).build();
+
   private static HttpServer server;
 
   @BeforeClass
   public static void init() throws Exception{
-    server = HttpServer.create(uri, 0);
+    server = HttpServer.create(new InetSocketAddress(uri.getPort()), 0);
     HttpHandler handler = RuntimeDelegate.getInstance().createEndpoint(new ApplicationConfig03(), HttpHandler.class);
 
-    server.createContext("http://localhost:8282",handler);
+    server.createContext(uri.getPath(),handler);
     server.start();
+    System.out.println("Enter Sleep!");
+    Thread.sleep(5000);
+    System.out.println("Out Sleep!");
   }
 
   @AfterClass
@@ -40,6 +45,24 @@ public class BookServiceIT  {
 
   @Test
   public void t1(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://localhost:8282/rs/book");
+    Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
 
+    Response response = builder.get();
+    //assertTrue(response.getStatusInfo() == Response.Status.OK);
+
+    String entity = response.readEntity(String.class);
+    assertEquals("H2G2", entity);
+  }
+
+  @Test
+  public void t2(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://ya.ru");
+    Invocation.Builder builder = target.request(MediaType.TEXT_HTML);
+
+    Response response = builder.get();
+    assertTrue(response.getStatusInfo() == Response.Status.OK);
   }
 }
