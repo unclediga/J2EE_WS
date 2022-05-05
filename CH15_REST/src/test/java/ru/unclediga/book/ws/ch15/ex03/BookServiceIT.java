@@ -22,20 +22,19 @@ import java.net.URI;
 
 public class BookServiceIT  {
 
-  private static URI uri = UriBuilder.fromUri("http://localhost/").port(8282).build();
+  private static URI uri = UriBuilder.fromUri("http://localhost").port(8282).build();
 
   private static HttpServer server;
 
   @BeforeClass
   public static void init() throws Exception{
-    server = HttpServer.create(new InetSocketAddress(uri.getPort()), 0);
+    System.out.println("path:" + uri.getPath() + " port:" + uri.getPort());
+    server = HttpServer.create(new InetSocketAddress("localhost", 8282), 0);
+    // server = HttpServer.create(new InetSocketAddress(uri.getPath(), uri.getPort()), 0);
     HttpHandler handler = RuntimeDelegate.getInstance().createEndpoint(new ApplicationConfig03(), HttpHandler.class);
 
-    server.createContext(uri.getPath(),handler);
+    server.createContext("/rs",handler);
     server.start();
-    System.out.println("Enter Sleep!");
-    Thread.sleep(5000);
-    System.out.println("Out Sleep!");
   }
 
   @AfterClass
@@ -50,8 +49,8 @@ public class BookServiceIT  {
     Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
 
     Response response = builder.get();
-    //assertTrue(response.getStatusInfo() == Response.Status.OK);
-
+    // assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     String entity = response.readEntity(String.class);
     assertEquals("H2G2", entity);
   }
@@ -59,10 +58,11 @@ public class BookServiceIT  {
   @Test
   public void t2(){
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target("http://ya.ru");
+    WebTarget target = client.target("http://localhost:8282/rs");
     Invocation.Builder builder = target.request(MediaType.TEXT_HTML);
 
     Response response = builder.get();
-    assertTrue(response.getStatusInfo() == Response.Status.OK);
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    // assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
   }
 }
