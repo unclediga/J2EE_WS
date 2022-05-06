@@ -28,9 +28,11 @@ public class BookServiceIT  {
 
   @BeforeClass
   public static void init() throws Exception{
-    System.out.println("path:" + uri.getPath() + " port:" + uri.getPort());
-    server = HttpServer.create(new InetSocketAddress("localhost", 8282), 0);
-    // server = HttpServer.create(new InetSocketAddress(uri.getPath(), uri.getPort()), 0);
+    System.out.printf("scheme[%s] host[%s] port[%s] path[%s]",uri.getScheme(),uri.getHost(),uri.getPort(),uri.getPath());
+    // http://localhost:8282
+
+    server = HttpServer.create(new InetSocketAddress(uri.getHost(), uri.getPort()), 0);
+    // server = HttpServer.create(new InetSocketAddress("localhost", 8282), 0);
     HttpHandler handler = RuntimeDelegate.getInstance().createEndpoint(new ApplicationConfig03(), HttpHandler.class);
 
     server.createContext("/rs",handler);
@@ -43,16 +45,60 @@ public class BookServiceIT  {
   }
 
   @Test
-  public void t1(){
+  public void t11() throws java.net.URISyntaxException{
     Client client = ClientBuilder.newClient();
     WebTarget target = client.target("http://localhost:8282/rs/book");
     Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
-
     Response response = builder.get();
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+    URI uri = new URI("http://localhost:8282/rs/book");
+    response = client.target(uri).request(MediaType.TEXT_PLAIN).get();
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+  }
+
+  @Test
+  public void t12(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://localhost:8282/rs/book");
+    Invocation invocation = target.request(MediaType.TEXT_PLAIN).buildGet();
+    Response response = invocation.invoke();
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+  }
+
+  @Test
+  public void t13(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://localhost:8282/rs/book");
+    Response response = target.request(MediaType.TEXT_PLAIN).get();
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     String entity = response.readEntity(String.class);
     assertEquals("H2G2", entity);
+    assertEquals("H2G2 is 4 chars", 4, entity.length());
   }
+
+  @Test
+  public void t14(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://localhost:8282/rs/book");
+    Response response = target.request("text/plain").get();
+    assertEquals(200, response.getStatus());
+    assertTrue(response.hasEntity());
+    assertEquals("H2G2", response.readEntity(String.class));
+  }
+
+  @Test
+  public void t15(){
+    Client client = ClientBuilder.newClient();
+    String entity = client
+                          .target(uri)
+                          .path("rs")
+                          .path("book")
+                          .request(MediaType.TEXT_PLAIN)
+                          .get(String.class);
+    assertEquals("H2G2", entity);
+  }
+
 
   @Test
   public void t2(){
