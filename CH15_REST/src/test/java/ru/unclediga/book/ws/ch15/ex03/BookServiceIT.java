@@ -49,7 +49,6 @@ public class BookServiceIT  {
     Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
 
     Response response = builder.get();
-    // assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     String entity = response.readEntity(String.class);
     assertEquals("H2G2", entity);
@@ -59,10 +58,19 @@ public class BookServiceIT  {
   public void t2(){
     Client client = ClientBuilder.newClient();
     WebTarget target = client.target("http://localhost:8282/rs");
-    Invocation.Builder builder = target.request(MediaType.TEXT_HTML);
+    Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
 
     Response response = builder.get();
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    // assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+  }
+
+  @Test
+  public void t3(){
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target("http://localhost:8282/");
+    Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
+
+    Response response = builder.get();
+    assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
   }
 }

@@ -14,10 +14,12 @@ public class ApplicationConfig03 extends Application {
   ApplicationConfig03(){
     Set<Class<?>> s = new HashSet<>();
     s.add(BookRestService.class);
+    s.add(RootRestService.class);
     classes =  Collections.unmodifiableSet(s);
   }
 
   public Set<Class<?>> getClasses(){
     return classes;
   } 
+
 }
