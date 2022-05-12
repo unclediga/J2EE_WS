@@ -4,13 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.unclediga</groupId>
-    <artifactId>example-ws</artifactId>
+    <groupId>ru.unclediga.example</groupId>
+    <artifactId>ws</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
 
     <modules>
-        <module>ch15_jax_rs</module>
+        <module>restful_ch03</module>
+        <module>jee7_ch15</module>
     </modules>
 
     <properties>
