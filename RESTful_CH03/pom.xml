@@ -8,7 +8,7 @@
   <artifactId>restful_ch03</artifactId>
   <packaging>war</packaging>
   <version>1.0</version>
-  <name>JAX-RS (Samples)</name>
+  <name>JAX-RS (RESTful)</name>
 
 
   <parent>
