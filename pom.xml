@@ -12,6 +12,7 @@
     <modules>
         <module>restful_ch03</module>
         <module>jee7_ch15</module>
+        <module>WS_UP_RUN</module>
     </modules>
 
     <properties>
