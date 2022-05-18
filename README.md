@@ -7,3 +7,6 @@ from:
    * Ch 03 "Your First JAX-RS Service"
 3. Book "Java Web Services: Up and Running", Second Edition by Martin Kalin 2013
    * Ch 01 "Web Services Quickstart - A First RESTful Example"
+
+   run integration tests: mvn integration-test -Pit
+   run Jetty            : mvn cargo:run

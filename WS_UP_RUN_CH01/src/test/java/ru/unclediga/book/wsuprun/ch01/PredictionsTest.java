@@ -9,6 +9,6 @@ public class PredictionsTest {
 
     @Test
     public void getPredictions() {
-
+	System.out.println("test!!!");
     }
 }
