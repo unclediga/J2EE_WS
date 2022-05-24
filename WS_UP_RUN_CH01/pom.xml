@@ -35,16 +35,19 @@
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-core-container-jetty</artifactId>
             <version>1.9.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-core-api-generic</artifactId>
             <version>1.9.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-core-api-container</artifactId>
             <version>1.9.11</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -137,15 +140,19 @@
               <groupId>org.codehaus.cargo</groupId>
               <artifactId>cargo-maven3-plugin</artifactId>
               <version>${cargo.version}</version>
-              <configuration>
-                 <configuration>
-                    <properties>
-                       <cargo.servlet.port>8081</cargo.servlet.port>
-                    </properties>
-                 </configuration>
+
+	      <configuration>
+              <!-- Container configuration -->
+                <container>
+                  <containerId>jetty9x</containerId>
+                </container>
+                  <configuration>
+                     <properties>
+                        <cargo.servlet.port>7778</cargo.servlet.port>
+                     </properties>
+                  </configuration>
               </configuration>
             </plugin>
-
 
       </plugins>
     </build>
