@@ -8,6 +8,7 @@ import org.junit.Test;
 import ru.unclediga.book.restful.ch04.domain.Customer;
 
 import javax.ws.rs.client.*;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -86,8 +87,17 @@ public class ShopServiceIT {
     @Test
     public void t0_GET() {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/customers/ping");
-        Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
+        WebTarget target = client.target("http://localhost:7778/services/echo");
+        Invocation.Builder builder = target.request();
+        Response response = builder.get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void t1_GET() {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:7778/services/customers/echo2");
+        Invocation.Builder builder = target.request();
         Response response = builder.get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -96,11 +106,21 @@ public class ShopServiceIT {
     public void t2_GET() {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/1");
-        Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
-//        Response response = builder.get();
-//        String customer = response.readEntity(String.class);
-        String customer = builder.get(String.class);
-        assertNotNull(customer);
+        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
+        Response response = builder.get();
+        String customer = response.readEntity(String.class);
+//        String customer = builder.get(String.class);
+        //assertNotNull(customer);
+        System.out.println("STATUS => " + response.getStatus());
         System.out.println("GET CUSTOMER => " + customer);
+    }
+
+    @Test
+    public void t4_GET() {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db");
+        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
+        Response response = builder.get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 }

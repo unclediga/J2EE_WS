@@ -27,6 +27,13 @@ public class CustomerResource {
     protected static final AtomicInteger idCnt = new AtomicInteger();
     protected static final Map<Integer, Customer> db = new ConcurrentHashMap<>();
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getEcho() {
+        System.out.println("db size = " + db.size());
+        return Response.ok().build();
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response createCustomer(InputStream is) {
@@ -38,7 +45,7 @@ public class CustomerResource {
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput getCustomer(@PathParam("id") Integer id) {
         Customer customer = db.get(id);
         if (customer != null) {

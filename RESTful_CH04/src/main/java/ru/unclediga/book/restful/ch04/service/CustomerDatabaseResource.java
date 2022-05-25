@@ -1,5 +1,6 @@
 package ru.unclediga.book.restful.ch04.service;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -10,6 +11,7 @@ public class CustomerDatabaseResource {
     private FirstLastCustomerResource russia = new FirstLastCustomerResource();
     private CustomerResource europe = new CustomerResource();
 
+    @GET
     @Path("{database}-db")
     public Object getDatabase(@PathParam("database") String db) {
         if (db.equals("europe")) {
@@ -21,12 +23,10 @@ public class CustomerDatabaseResource {
         }
     }
 
-    @Path("/ping")
-    public Response getPing() {
-        return Response.created(
-                URI.create("/customers/ping"))
-                .status(Response.Status.OK)
-                .build();
+    @GET
+    @Path("echo2")
+    public Response getEcho() {
+        return Response.ok().build();
     }
 }
 
