@@ -30,7 +30,7 @@ public class CustomerResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getEcho() {
-        System.out.println("db size = " + db.size());
+        System.out.println("EUROPE db size = " + db.size());
         return Response.ok().build();
     }
 
@@ -48,15 +48,18 @@ public class CustomerResource {
     @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput getCustomer(@PathParam("id") Integer id) {
         Customer customer = db.get(id);
-        if (customer != null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        System.out.println("db size:" + db.size());
+        System.out.println("id : " + id);
+        System.out.println("cust : " + customer);
+
+        if (customer == null) {
+            throw new WebApplicationException("Not found item id=[" + id + "]");
         }
 
-        return new StreamingOutput() {
-            @Override
-            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
-                writeCustomer(outputStream, customer);
-            }
+
+        return outputStream -> {
+            System.out.println("customer = " + customer);
+            writeCustomer(outputStream, customer);
         };
     }
 
@@ -103,9 +106,10 @@ public class CustomerResource {
 
     protected void writeCustomer(OutputStream os, Customer customer) {
         PrintWriter writer = new PrintWriter(os);
-        writer.println("<customer id=\"" + customer.getId() + "\">");
-        writer.println("   <first-name>" + customer.getFirstName() + "</first-name>");
-        writer.println("   <last-name>" + customer.getLastName() + "</last-name>");
-        writer.println("</customer>");
+        writer.print("<customer id=\"" + customer.getId() + "\">");
+        writer.print("<first-name>" + customer.getFirstName() + "</first-name>");
+        writer.print("<last-name>" + customer.getLastName() + "</last-name>");
+        writer.print("</customer>");
+        writer.flush();
     }
 }

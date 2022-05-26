@@ -8,8 +8,8 @@ import java.net.URI;
 
 @Path("/customers")
 public class CustomerDatabaseResource {
-    private FirstLastCustomerResource russia = new FirstLastCustomerResource();
-    private CustomerResource europe = new CustomerResource();
+    protected FirstLastCustomerResource russia = new FirstLastCustomerResource();
+    protected CustomerResource europe = new CustomerResource();
 
     @Path("{database}-db")
     public Object getDatabase(@PathParam("database") String db) {

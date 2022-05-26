@@ -8,23 +8,20 @@ import org.junit.Test;
 import ru.unclediga.book.restful.ch04.domain.Customer;
 
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.RuntimeDelegate;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ShopServiceIT {
 
     private final static URI uri = UriBuilder.fromUri("http://localhost").port(7778).build();
     private static String customerXML;
+    private static Customer PETER_PEN = new Customer(1,"Peter","Pen");
+
 
     private static HttpServer server;
 
@@ -36,23 +33,21 @@ public class ShopServiceIT {
         server = HttpServer.create(new InetSocketAddress(uri.getHost(), uri.getPort()), 0);
         // server = HttpServer.create(new InetSocketAddress("localhost", 8282), 0);
         HttpHandler handler = RuntimeDelegate.getInstance().createEndpoint(new ShoppingApplication(), HttpHandler.class);
-
         server.createContext("/services", handler);
         server.start();
 
         System.out.printf("scheme[%s] host[%s] port[%s] path[%s]", uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath());
 
-        Customer customer = new Customer();
-        customer.setId(1);
-        customer.setFirstName("Peter");
-        customer.setLastName("Pen");
-        CustomerResource.db.put(CustomerResource.idCnt.incrementAndGet(), customer);
-        FirstLastCustomerResource.db.put("Peter-Pen", customer);
+        CustomerResource.db.put(CustomerResource.idCnt.incrementAndGet(), PETER_PEN);
+        FirstLastCustomerResource.db.put("Peter-Pen", PETER_PEN);
 
-        customerXML = "<customer id=\"1\"> " +
+        customerXML =
+                "<customer id=\"1\">" +
                 "<first-name>Peter</first-name>" +
                 "<last-name>Pen</last-name>" +
                 "</customer>";
+
+
     }
 
     @AfterClass
@@ -76,12 +71,22 @@ public class ShopServiceIT {
     }
 
     @Test
+    public void t00() throws IOException {
+
+        OutputStream os = new ByteArrayOutputStream();
+        new CustomerResource().writeCustomer(os,PETER_PEN);
+        os.close();
+        assertEquals(customerXML,os.toString());
+    }
+
+    @Test
     public void t1_POST() {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:7778/services/customers/europe-db");
         Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
         Response response = builder.post(Entity.xml(customerXML));
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+        assertTrue(CustomerResource.db.size() == 2);
     }
 
     @Test
@@ -105,20 +110,39 @@ public class ShopServiceIT {
     @Test
     public void t2_GET() {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/1");
-        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
-        Response response = builder.get();
-        String customer = response.readEntity(String.class);
-//        String customer = builder.get(String.class);
-        //assertNotNull(customer);
-        System.out.println("STATUS => " + response.getStatus());
-        System.out.println("GET CUSTOMER => " + customer);
+
+        final Response response = client.target("http://localhost:7778/services/customers/europe-db/1").request().get();
+        System.out.println("ST " + response.getStatus());
+        System.out.println("ST " + response.getStatusInfo());
+        System.out.println("ST " + response.getLanguage());
+
+
+//        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/1");
+//        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
+//        Invocation inv1 = builder.buildGet();
+//
+//        Response response = inv1.invoke();
+//        String customer = response.readEntity(String.class);
+//        //assertNotNull(customer);
+//        System.out.println("STATUS => " + response.getStatus());
+//        System.out.println("GET CUSTOMER => " + customer);
+        //assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+//        assertEquals(customer,customerXML);
     }
 
     @Test
     public void t4_GET() {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:7778/services/customers/europe-db");
+        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
+        Response response = builder.get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void t5_GET() {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:7778/services/customers/russia-db");
         Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
         Response response = builder.get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

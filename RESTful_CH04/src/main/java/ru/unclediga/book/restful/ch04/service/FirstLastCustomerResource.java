@@ -25,6 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FirstLastCustomerResource {
     protected static final Map<String, Customer> db = new ConcurrentHashMap<>();
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getEcho() {
+        System.out.println("RUSSIA db size = " + db.size());
+        return Response.ok().build();
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response createCustomer(InputStream is) {
@@ -99,9 +106,9 @@ public class FirstLastCustomerResource {
 
     protected void writeCustomer(OutputStream os, Customer customer) {
         PrintWriter writer = new PrintWriter(os);
-        writer.println("<customer id=\"" + customer.getId() + "\">");
-        writer.println("   <first-name>" + customer.getFirstName() + "</first-name>");
-        writer.println("   <last-name>" + customer.getLastName() + "</last-name>");
-        writer.println("</customer>");
+        writer.print("<customer id=\"" + customer.getId() + "\">");
+        writer.print("<first-name>" + customer.getFirstName() + "</first-name>");
+        writer.print("<last-name>" + customer.getLastName() + "</last-name>");
+        writer.print("</customer>");
     }
 }

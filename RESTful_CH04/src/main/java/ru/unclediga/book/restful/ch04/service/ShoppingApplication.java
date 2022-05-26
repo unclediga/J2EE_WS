@@ -5,6 +5,7 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
+@ApplicationPath("/services")
 public class ShoppingApplication extends Application {
 
     private final HashSet<Object> singletons = new HashSet<>();

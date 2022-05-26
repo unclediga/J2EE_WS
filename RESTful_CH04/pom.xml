@@ -11,10 +11,12 @@
 
     <groupId>ru.unclediga.example.ws</groupId>
     <artifactId>restful_ch04</artifactId>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <cargo.version>1.9.11</cargo.version>
     </properties>
 
     <dependencies>
@@ -38,10 +40,10 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>fish.payara.extras</groupId>
-            <artifactId>payara-embedded-all</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>fish.payara.extras</groupId>-->
+<!--            <artifactId>payara-embedded-all</artifactId>-->
+<!--        </dependency>-->
 
         <!-- TEST -->
         <dependency>
@@ -49,12 +51,133 @@
             <artifactId>junit</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-core-container-jetty</artifactId>
+            <version>1.9.11</version>
+<!--            <scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-core-api-generic</artifactId>
+            <version>1.9.11</version>
+<!--            <scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-core-api-container</artifactId>
+            <version>1.9.11</version>
+<!--            <scope>test</scope>-->
+        </dependency>
+
 
     </dependencies>
+
+
+
+    <profiles>
+        <profile>
+            <id>it</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>none</exclude>
+                                    </excludes>
+                                    <includes>
+                                        <include>**/*IT.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven3-plugin</artifactId>
+                        <version>${cargo.version}</version>
+                        <executions>
+                            <execution>
+                                <id>start-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-server</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
+
+
 
     <build>
 
         <finalName>example-jaxrs</finalName>
+
+
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>${cargo.version}</version>
+
+                <configuration>
+                    <!-- Container configuration -->
+                    <container>
+                        <containerId>jetty9x</containerId>
+                    </container>
+                    <configuration>
+                        <properties>
+                            <cargo.servlet.port>7778</cargo.servlet.port>
+                        </properties>
+                    </configuration>
+                </configuration>
+            </plugin>
+
+        </plugins>
 
     </build>
 
