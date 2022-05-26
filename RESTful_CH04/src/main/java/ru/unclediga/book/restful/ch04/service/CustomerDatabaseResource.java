@@ -11,7 +11,6 @@ public class CustomerDatabaseResource {
     private FirstLastCustomerResource russia = new FirstLastCustomerResource();
     private CustomerResource europe = new CustomerResource();
 
-    @GET
     @Path("{database}-db")
     public Object getDatabase(@PathParam("database") String db) {
         if (db.equals("europe")) {
