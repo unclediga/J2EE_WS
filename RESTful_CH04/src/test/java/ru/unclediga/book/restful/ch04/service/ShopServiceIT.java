@@ -20,7 +20,7 @@ public class ShopServiceIT {
 
     private final static URI uri = UriBuilder.fromUri("http://localhost").port(7778).build();
     private static String customerXML;
-    private static Customer PETER_PEN = new Customer(1,"Peter","Pen");
+    private static Customer PETER_PAN = new Customer(1,"Peter","Pan");
 
 
     private static HttpServer server;
@@ -38,13 +38,13 @@ public class ShopServiceIT {
 
         System.out.printf("scheme[%s] host[%s] port[%s] path[%s]", uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath());
 
-        CustomerResource.db.put(CustomerResource.idCnt.incrementAndGet(), PETER_PEN);
-        FirstLastCustomerResource.db.put("Peter-Pen", PETER_PEN);
+        CustomerResource.db.put(CustomerResource.idCnt.incrementAndGet(), PETER_PAN);
+        FirstLastCustomerResource.db.put(PETER_PAN.getFirstName() + "-" + PETER_PAN.getLastName(), PETER_PAN);
 
         customerXML =
                 "<customer id=\"1\">" +
                 "<first-name>Peter</first-name>" +
-                "<last-name>Pen</last-name>" +
+                "<last-name>Pan</last-name>" +
                 "</customer>";
 
 
@@ -60,21 +60,21 @@ public class ShopServiceIT {
         InputStream is = new ByteArrayInputStream(customerXML.getBytes());
         Customer customer = new CustomerResource().readCustomer(is);
         assertNotNull(customer);
-        assertEquals("Peter", customer.getFirstName());
-        assertEquals("Pen", customer.getLastName());
+        assertEquals(PETER_PAN.getFirstName(), customer.getFirstName());
+        assertEquals(PETER_PAN.getLastName(), customer.getLastName());
 
         is = new ByteArrayInputStream(customerXML.getBytes());
         customer = new FirstLastCustomerResource().readCustomer(is);
         assertNotNull(customer);
-        assertEquals("Peter", customer.getFirstName());
-        assertEquals("Pen", customer.getLastName());
+        assertEquals(PETER_PAN.getFirstName(), customer.getFirstName());
+        assertEquals(PETER_PAN.getLastName(), customer.getLastName());
     }
 
     @Test
     public void t00() throws IOException {
 
         OutputStream os = new ByteArrayOutputStream();
-        new CustomerResource().writeCustomer(os,PETER_PEN);
+        new CustomerResource().writeCustomer(os, PETER_PAN);
         os.close();
         assertEquals(customerXML,os.toString());
     }
@@ -110,24 +110,15 @@ public class ShopServiceIT {
     @Test
     public void t2_GET() {
         Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/1");
 
-        final Response response = client.target("http://localhost:7778/services/customers/europe-db/1").request().get();
+        final Response response = target.request(MediaType.TEXT_PLAIN).get();
+        String customer = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         System.out.println("ST " + response.getStatus());
-        System.out.println("ST " + response.getStatusInfo());
-        System.out.println("ST " + response.getLanguage());
-
-
-//        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/1");
-//        Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
-//        Invocation inv1 = builder.buildGet();
-//
-//        Response response = inv1.invoke();
-//        String customer = response.readEntity(String.class);
-//        //assertNotNull(customer);
-//        System.out.println("STATUS => " + response.getStatus());
-//        System.out.println("GET CUSTOMER => " + customer);
-        //assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-//        assertEquals(customer,customerXML);
+        System.out.println("STINFO " + response.getStatusInfo());
+        System.out.println("CUST " + customer);
+        assertEquals(customer,customerXML);
     }
 
     @Test
