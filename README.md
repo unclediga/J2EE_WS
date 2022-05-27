@@ -10,3 +10,12 @@ from:
 
    run integration tests: mvn integration-test -Pit
    run Jetty            : mvn cargo:run
+4. Examples from sites:
+   * [How to add Maven Jetty Plugin](https://javapointers.com/how-to/add-maven-jetty-plugin/)
+      
+     ```
+     mvn jetty:run  => http://localhost:7778
+         default redirect on index.jsp (see jetty internal config)
+     ``` 
+   * [Java Rest using JAX-RS and Jetty Maven Plugin Tutorial](https://javapointers.com/java/java-ee/java-rest-using-jax-rs-and-jetty-maven-plugin-tutorial/) 
+
