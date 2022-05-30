@@ -23,9 +23,9 @@ public class CustomerDatabaseResource {
     }
 
     @GET
-    @Path("echo2")
+    @Path("echo")
     public Response getEcho() {
-        return Response.ok().build();
+        return Response.ok("ECHO from /customers").build();
     }
 }
 

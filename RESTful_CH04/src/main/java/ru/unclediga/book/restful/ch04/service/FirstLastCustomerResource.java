@@ -26,10 +26,11 @@ public class FirstLastCustomerResource {
     protected static final Map<String, Customer> db = new ConcurrentHashMap<>();
 
     @GET
+    @Path("/echo")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getEcho() {
         System.out.println("RUSSIA db size = " + db.size());
-        return Response.ok().build();
+        return Response.ok("ECHO from FirstLastCustomerResource").build();
     }
 
     @POST

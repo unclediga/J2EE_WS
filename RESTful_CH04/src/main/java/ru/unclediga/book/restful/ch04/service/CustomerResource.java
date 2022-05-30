@@ -28,10 +28,11 @@ public class CustomerResource {
     protected static final Map<Integer, Customer> db = new ConcurrentHashMap<>();
 
     @GET
+    @Path("/echo")	
     @Produces(MediaType.TEXT_PLAIN)
     public Response getEcho() {
         System.out.println("EUROPE db size = " + db.size());
-        return Response.ok().build();
+        return Response.ok("ECHO from CustomerResource").build();
     }
 
     @POST

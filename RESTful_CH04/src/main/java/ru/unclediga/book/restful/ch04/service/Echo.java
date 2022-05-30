@@ -11,6 +11,6 @@ public class Echo {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getEcho() {
-        return Response.ok("HELLO").build();
+        return Response.ok("ECHO from app root").build();
     }
 }
