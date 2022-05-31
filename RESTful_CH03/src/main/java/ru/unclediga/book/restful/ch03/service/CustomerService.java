@@ -52,6 +52,26 @@ public class CustomerService implements CustomerResource {
         };
     }
 
+    @Override
+    public void updateCustomer(int id, InputStream in) {
+        Customer customer = customerDB.get(id);
+        if (customer == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        Customer newCustomer = readCustomer(in);
+        customer.setLastName(newCustomer.getLastName());
+        customer.setFirstName(newCustomer.getFirstName());
+        customer.setStreet(newCustomer.getStreet());
+    }
+
+    @Override
+    public void deleteCustomer(int id) {
+        Customer customer = customerDB.remove(id);
+        if (customer == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    }
+
     void writeCustomer(OutputStream outputStream, Customer customer) {
         PrintWriter writer = new PrintWriter(outputStream);
         writer.printf("<customer id=\"%d\">" +

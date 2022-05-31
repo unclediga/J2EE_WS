@@ -15,4 +15,13 @@ public interface CustomerResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_XML)
     StreamingOutput getCustomer(@PathParam("id") int id);
+
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_XML)
+    void updateCustomer(@PathParam("id") int id, InputStream in);
+
+    @DELETE
+    @Path("{id}")
+    void deleteCustomer(@PathParam("id") int id);
 }

@@ -25,8 +25,8 @@ public class ShopServiceIT {
 
     private final static URI uri = UriBuilder.fromUri("http://localhost").port(8282).build();
     private static String customerXML;
-    private static Customer PETER_PAN = new Customer(1, "Peter", "Pan", "Peace st");
-
+    private static final Customer PETER_PAN = new Customer(1, "Peter", "Pan", "Peace st");
+    private static final Customer WENDY_DARLING = new Customer(2, "Wendy", "Darling", "Kensington Gardens");
 
     private static HttpServer server;
 
@@ -100,6 +100,44 @@ public class ShopServiceIT {
         assertNotNull(customer);
         assertEquals(customerXML, customer);
         System.out.println("GET CUSTOMER => " + customer);
+    }
+
+    @Test
+    public void t3_PUT() {
+
+        CustomerService.customerDB.put(1, PETER_PAN.copy());
+
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:8282/services/customers/1");
+        Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
+        String newCustomerXML = customerXML.replace("Peace st", "Lenin st");
+        Response response = builder.put(Entity.xml(newCustomerXML));
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus()); /* 204 */
+
+        assertEquals(1, CustomerService.customerDB.size());
+        final Customer customer = CustomerService.customerDB.get(1);
+        assertEquals(PETER_PAN.getLastName(), customer.getLastName());
+        assertEquals(PETER_PAN.getFirstName(), customer.getFirstName());
+        assertEquals( "Lenin st", customer.getStreet());
+    }
+
+    @Test
+    public void t4_DEL() {
+
+        CustomerService.customerDB.put(PETER_PAN.getId(), PETER_PAN.copy());
+        CustomerService.customerDB.put(WENDY_DARLING.getId(), WENDY_DARLING.copy());
+
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:8282/services/customers/1");
+        Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
+        Response response = builder.delete();
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus()); /* 204 */
+
+        assertEquals(1, CustomerService.customerDB.size());
+        final Customer customer = CustomerService.customerDB.get(2);
+        assertEquals(WENDY_DARLING.getLastName(), customer.getLastName());
+        assertEquals(WENDY_DARLING.getFirstName(), customer.getFirstName());
+        assertEquals(WENDY_DARLING.getStreet(), customer.getStreet());
     }
 
 }

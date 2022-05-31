@@ -87,12 +87,17 @@ public class Customer {
 
     private String country;
 
+    public Customer copy() {
+        return new Customer(id, firstName, lastName, street);
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", street='" + street + '\'' +
                 '}';
     }
 }
