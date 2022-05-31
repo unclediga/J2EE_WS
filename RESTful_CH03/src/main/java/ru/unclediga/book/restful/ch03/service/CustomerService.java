@@ -57,7 +57,7 @@ public class CustomerService implements CustomerResource {
         writer.printf("<customer id=\"%d\">" +
                         "<first-name>%s</first-name>" +
                         "<last-name>%s</last-name>" +
-                        "<street>%s</last-name>" +
+                        "<street>%s</street>" +
                         "</customer>",
                 customer.getId(),
                 customer.getFirstName(),

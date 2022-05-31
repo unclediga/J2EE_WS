@@ -2,28 +2,31 @@ package ru.unclediga.book.restful.ch03.service;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.xml.bind.StringInputStream;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.unclediga.book.restful.ch03.domain.Customer;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.RuntimeDelegate;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ShopServiceIT {
 
     private final static URI uri = UriBuilder.fromUri("http://localhost").port(8282).build();
     private static String customerXML;
+    private static Customer PETER_PAN = new Customer(1, "Peter", "Pan", "Peace st");
+
 
     private static HttpServer server;
 
@@ -39,15 +42,11 @@ public class ShopServiceIT {
         server.createContext("/services", handler);
         server.start();
 
-        Customer customer = new Customer();
-        customer.setId(1);
-        customer.setFirstName("Peter");
-        customer.setLastName("Pen");
-        CustomerService.customerDB.put(1, customer);
 
-        customerXML = "<customer id=\"1\"> " +
-                "<first-name>Peter</first-name>" +
-                "<last-name>Pen</last-name>" +
+        customerXML = "<customer id=\"1\">" +
+                "<first-name>" + PETER_PAN.getFirstName() + "</first-name>" +
+                "<last-name>" + PETER_PAN.getLastName() + "</last-name>" +
+                "<street>" + PETER_PAN.getStreet() + "</street>" +
                 "</customer>";
     }
 
@@ -56,33 +55,51 @@ public class ShopServiceIT {
         server.stop(0);
     }
 
+    @Before
+    public void initDb() {
+        CustomerService.customerDB.clear();
+    }
+
     @Test
     public void t0() {
         InputStream is = new ByteArrayInputStream(customerXML.getBytes());
         Customer customer = new CustomerService().readCustomer(is);
         assertNotNull(customer);
-        assertEquals("Peter", customer.getFirstName());
-        assertEquals("Pen", customer.getLastName());
+        assertEquals(PETER_PAN.getFirstName(), customer.getFirstName());
+        assertEquals(PETER_PAN.getLastName(), customer.getLastName());
+        assertEquals(PETER_PAN.getStreet(), customer.getStreet());
     }
 
     @Test
     public void t1_POST() {
+
+        assertTrue(CustomerService.customerDB.isEmpty());
+
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8282/services/customers");
         Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
         Response response = builder.post(Entity.xml(customerXML));
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        assertEquals(1, CustomerService.customerDB.size());
+        final Customer customer = CustomerService.customerDB.get(1);
+        assertEquals(PETER_PAN.getLastName(), customer.getLastName());
+        assertEquals(PETER_PAN.getFirstName(), customer.getFirstName());
+        assertEquals(PETER_PAN.getStreet(), customer.getStreet());
     }
 
     @Test
     public void t2_GET() {
+
+        CustomerService.customerDB.put(1, PETER_PAN);
+
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8282/services/customers/1");
         Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
-//        Response response = builder.get();
-//        String customer = response.readEntity(String.class);
         String customer = builder.get(String.class);
         assertNotNull(customer);
+        assertEquals(customerXML, customer);
         System.out.println("GET CUSTOMER => " + customer);
     }
+
 }

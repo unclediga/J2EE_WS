@@ -10,6 +10,17 @@ public class Customer {
     private String city;
     private String state;
     private String zip;
+
+    public Customer() {
+    }
+
+    public Customer(int id, String firstName, String lastName, String street) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.street = street;
+    }
+
     public int getId() {
         return id;
     }
