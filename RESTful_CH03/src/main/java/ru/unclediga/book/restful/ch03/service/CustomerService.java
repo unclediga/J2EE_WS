@@ -7,8 +7,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.unclediga.book.restful.ch03.domain.Customer;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.parsers.DocumentBuilder;

@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.unclediga.book.restful.ch03.domain.Customer;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
