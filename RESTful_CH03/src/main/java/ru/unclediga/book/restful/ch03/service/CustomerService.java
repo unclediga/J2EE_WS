@@ -24,13 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Path("/customers")
-public class CustomerService {
+public class CustomerService implements CustomerResource {
     static Map<Integer, Customer> customerDB = new ConcurrentHashMap<>();
     //    Map<Integer, Customer> customerDB = new ConcurrentHashMap<>();
     AtomicInteger idCounter = new AtomicInteger();
 
-    @POST
-    @Consumes(MediaType.APPLICATION_XML)
+    @Override
     public Response createCustomer(InputStream in) {
         Customer customer = readCustomer(in);
         customer.setId(idCounter.incrementAndGet());
@@ -39,17 +38,15 @@ public class CustomerService {
         return Response.created(URI.create("/customers/" + customer.getId())).build();
     }
 
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_XML)
-    public StreamingOutput getCustomer(@PathParam("id") int id) {
+    @Override
+    public StreamingOutput getCustomer(int id) {
         Customer customer = customerDB.get(id);
         if (customer == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         return new StreamingOutput() {
             @Override
-            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+            public void write(OutputStream outputStream) throws WebApplicationException {
                 writeCustomer(outputStream, customer);
             }
         };

@@ -8,8 +8,6 @@
   <artifactId>restful_ch03</artifactId>
   <packaging>war</packaging>
   <version>1.0</version>
-  <name>JAX-RS (RESTful)</name>
-
 
   <parent>
     <groupId>ru.unclediga.example</groupId>
