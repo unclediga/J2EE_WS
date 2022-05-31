@@ -11,6 +11,7 @@
 
     <modules>
         <module>restful_ch03</module>
+        <module>restful_ch05</module>
         <module>jee7_ch15</module>
         <module>WS_UP_RUN_CH01</module>
         <module>RESTful_CH04</module>
