@@ -1,6 +1,36 @@
 package ru.unclediga.book.restful.ch05.service;
 
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ws.rs.ext.RuntimeDelegate;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
 public class InjectionTest {
+
+    private static HttpServer server;
+
+    @BeforeClass
+    public static void init() throws Exception {
+        //server = HttpServer.create(new InetSocketAddress("localhost", 7778), 0);
+        //final HttpHandler endpoint = RuntimeDelegate.getInstance().createEndpoint(null, HttpHandler.class);
+
+    }
+
+    @AfterClass
+    public static void fin(){
+
+    }
+
+    @Test
+    public void testManyPathParams() throws Exception{
+
+    }
+
 /*
     @Test
     public void testCarResource() throws Exception
