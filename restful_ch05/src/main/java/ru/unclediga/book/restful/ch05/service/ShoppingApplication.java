@@ -6,26 +6,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationPath("/")
-public class ShoppingApplication extends Application
-{
-//    private Set<Object> singletons = new HashSet<Object>();
-//    private Set<Class<?>> empty = new HashSet<Class<?>>();
+public class ShoppingApplication extends Application {
+    private final Set<Object> singletons = new HashSet<Object>();
+    private final Set<Class<?>> empty = new HashSet<Class<?>>();
 
-//    public ShoppingApplication()
-//    {
-//        singletons.add(new CarResource());
-//    }
-//
-//    @Override
-//    public Set<Class<?>> getClasses()
-//    {
-//        return empty;
-//    }
-//
-//    @Override
-//    public Set<Object> getSingletons()
-//    {
-//        //return singletons;
-//        return
-//    }
+    public ShoppingApplication() {
+        singletons.add(new CarResource());
+    }
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        return empty;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }
