@@ -101,7 +101,7 @@ public class ShopServiceIT {
     @Test
     public void t1_GET() {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/services/customers/echo2");
+        WebTarget target = client.target("http://localhost:7778/services/customers/echo");
         Invocation.Builder builder = target.request();
         Response response = builder.get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -124,18 +124,20 @@ public class ShopServiceIT {
     @Test
     public void t4_GET() {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db");
+        WebTarget target = client.target("http://localhost:7778/services/customers/europe-db/echo");
         Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
         Response response = builder.get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("ECHO from CustomerResource", response.readEntity(String.class));
     }
 
     @Test
     public void t5_GET() {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/services/customers/russia-db");
+        WebTarget target = client.target("http://localhost:7778/services/customers/russia-db/echo");
         Invocation.Builder builder = target.request(MediaType.TEXT_PLAIN);
         Response response = builder.get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("ECHO from FirstLastCustomerResource", response.readEntity(String.class));
     }
 }
