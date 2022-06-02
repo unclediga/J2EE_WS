@@ -42,21 +42,15 @@ public class InjectionIT {
     }
 
     @Test
-    public void t1_GET() {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:7778/cars/echo");
-        Invocation.Builder builder = target.request();
-        Response response = builder.get();
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    }
-
-    @Test
     public void testIndexPage() {
         final Client client = ClientBuilder.newClient();
         final Response response = client
                 .target("http://localhost:7778/index.jsp")
                 .request()
                 .get();
+        /*
+             !!!!! NOT_FOUND !!!!!
+         */
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
@@ -71,7 +65,20 @@ public class InjectionIT {
         assertEquals("send ECHO from @Path(/echo)", response.readEntity(String.class));
     }
 
-/*
+    @Test
+    public void testEcho2() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/services/cars/echo")
+                .request("text/plain")
+                .get();
+        /*
+             !!!!! NOT_FOUND !!!!!
+         */
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+    }
+
+    /*
     @Test
     public void testCarResource() throws Exception
     {
