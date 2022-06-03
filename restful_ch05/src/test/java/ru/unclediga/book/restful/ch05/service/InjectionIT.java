@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.RuntimeDelegate;
@@ -76,6 +74,90 @@ public class InjectionIT {
              !!!!! NOT_FOUND !!!!!
          */
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testManyParam() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/p123-assa")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("par1[123] par2[assa]", response.readEntity(String.class));
+    }
+
+    @Test
+    public void testPathRegExp() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/firmhyundai/a/b/c/year2010")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("p1[hyundai] many[a/b/c] p2[2010]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testPathInTheMiddle() {
+        final Client client = ClientBuilder.newClient();
+
+
+
+        /*
+         * CHOICE endpoints:
+         *   @Path("/{firm}/{model}/interior{mx:.*}/{year}")   - more specific ("../interior/..")
+         *   @Path("/firm{p1}/{many:.*}/year{p2}")
+         * */
+        Response response = client
+                .target("http://localhost:7778/cars/firmhyundai/getz/interior/year2010")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+
+
+        /*
+         * CHOICE endpoints:
+         *   @Path("/{firm}/{model}/interior{mx:.*}/{year}")
+         *   @Path("/firm{p1}/{many:.*}/year{p2}")              - more specific (".../year")
+         * */
+        response = client
+                .target("http://localhost:7778/cars/firmhyundai/getz/inter/year2010")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("p1[hyundai] many[getz/inter] p2[2010]",
+                response.readEntity(String.class));
+
+
+        response = client
+                .target("http://localhost:7778/cars/firmhyundai/year2010")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("p1[hyundai] p2[2010]",
+                response.readEntity(String.class));
+
+        /* NO endpoints with int p2: 5 digits  */
+        response = client
+                .target("http://localhost:7778/cars/firmhyundai/year20109")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+
+    }
+
+    @Test
+    public void testMatrix() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/hyundai/getz;color=blue;engine=1_4/interior;color=black/2010")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("firm[hyundai] model[getz] engine[1_4] color[blue,black] year[2010]",
+                response.readEntity(String.class));
     }
 
     /*
