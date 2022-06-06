@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.RuntimeDelegate;
@@ -157,6 +158,45 @@ public class InjectionIT {
                 .get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals("firm[hyundai] model[getz] engine[1_4] color[blue,black] year[2010]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testQuery() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/hyundai/getz?start=1&size=3")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("query start[1] size[3]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testUriInfo() {
+        Response response = null;
+        final Client client = ClientBuilder.newClient();
+        final WebTarget target = client.target("http://localhost:7778/cars");
+        response = target
+                .queryParam("start", 2)
+                .queryParam("size", 3)
+                .request("text/plain")
+                .get();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("uriInfo start[2] size[3] path[cars]",
+                response.readEntity(String.class));
+
+        response = target
+                .path("hyundai")
+                .queryParam("start", 4)
+                .queryParam("size", 5)
+                .request("text/plain")
+                .get();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("uriInfo start[4] size[5] path[cars/hyundai]",
                 response.readEntity(String.class));
     }
 

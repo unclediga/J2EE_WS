@@ -2,8 +2,11 @@ package ru.unclediga.book.restful.ch05.service;
 
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.UriInfo;
+
 
 @Path("/cars")
 public class CarResource {
@@ -50,7 +53,7 @@ public class CarResource {
     public String getPathInTheMiddle(@PathParam("p1") String p1,
                                      @PathParam("p2") int p2,
                                      @PathParam("many") String many) {
-                                     // @PathParam("many") PathSegment many NOT WORKED!!!!
+        // @PathParam("many") PathSegment many NOT WORKED!!!!
         // a/b/c    PathSegment  -> getPath()/toString() return "c"
         // a/b/c    String       -> return "a/b/c"
         return "p1[" + p1 + "] many[" + many + "] p2[" + p2 + "]";
@@ -75,5 +78,55 @@ public class CarResource {
                 + "] engine[" + engine
                 + "] color[" + colorM + "," + colorI
                 + "] year[" + year + "]";
+    }
+
+    // http://localhost:7778/cars/huyndai?start=1&size=3
+    @GET
+    @Path("hyundai/getz")
+    @Produces("text/plain")
+    public String getQueryResources(@QueryParam("start") int start,
+                                    @QueryParam("size") int size) {
+
+        return "query start[" + start + "] size[" + size + "]";
+    }
+
+    // http://localhost:7778/cars/uriinfo?start=2&size=2
+    @GET
+    @Produces("text/plain")
+    public String getUriInfo(@Context UriInfo uriInfo) {
+
+        /*
+        *   http://localhost:7778/cars
+            cars
+            http://localhost:7778/
+         */
+        System.out.println(uriInfo.getAbsolutePath());
+        System.out.println(uriInfo.getPath());
+        System.out.println(uriInfo.getBaseUri());
+        final MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+
+        return "uriInfo start[" + queryParameters.getFirst("start") +
+                "] size[" + queryParameters.getFirst("size") +
+                "] path[" + uriInfo.getPath() + "]";
+    }
+
+    // http://localhost:7778/cars/uriinfo?start=2&size=2
+    @GET
+    @Path("/hyundai")
+    @Produces("text/plain")
+    public String getUriInfo2(@Context UriInfo uriInfo) {
+        /*
+        http://localhost:7778/cars/hyundai
+        cars/hyundai
+        http://localhost:7778/
+         */
+        System.out.println(uriInfo.getAbsolutePath());
+        System.out.println(uriInfo.getPath());
+        System.out.println(uriInfo.getBaseUri());
+        final MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+
+        return "uriInfo start[" + queryParameters.getFirst("start") +
+                "] size[" + queryParameters.getFirst("size") +
+                "] path[" + uriInfo.getPath() + "]";
     }
 }
