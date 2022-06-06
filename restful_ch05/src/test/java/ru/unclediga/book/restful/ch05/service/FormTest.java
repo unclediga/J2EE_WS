@@ -2,10 +2,12 @@ package ru.unclediga.book.restful.ch05.service;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import com.sun.xml.internal.ws.api.message.Header;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -65,4 +67,25 @@ public class FormTest {
         System.out.println("RESP = " + response.getStatusInfo());
         assertEquals("firstname[AAA] lastname[BBB]", response.readEntity(String.class));
     }
+
+    @Test
+    public void testHeader() {
+        final Client client = ClientBuilder.newClient();
+        final MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
+        headers.add("Referer","localhost");
+        headers.add("Content-Language","ru");
+        headers.add("MyHeader","MyValue");
+        final Response response = client
+                .target("http://localhost:7778/customers/header")
+                .request("text/plain")
+                .headers(headers)
+                .get();
+        assertEquals("Referer[localhost] Content-Language[ru]", response.readEntity(String.class));
+
+
+
+    }
+
+
+
 }
