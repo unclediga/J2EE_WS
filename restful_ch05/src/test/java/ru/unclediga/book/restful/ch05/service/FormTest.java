@@ -152,7 +152,33 @@ public class FormTest {
                 .request("text/plain")
                 .get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals("fuels [BENZINE, DIESEL, GAS]",
+        assertEquals("fuels [BENZINE, DIESEL, GAS] test[123]",
                 response.readEntity(String.class));
     }
+
+    @Test
+    public void testDefault() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/engines")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("fuels [GAS] test[123]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testEncoded() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/encode")
+                .queryParam("txt", "?&a b c")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("txt[%3F%26a+b+c] txt2[?&a b c]",
+                response.readEntity(String.class));
+    }
+
 }

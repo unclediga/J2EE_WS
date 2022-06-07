@@ -6,6 +6,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -156,12 +157,25 @@ public class CarResource {
         return "colors " + availableColors.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
     }
 
+    private static final List<FuelType> l = Arrays.asList(FuelType.GAS);
+
     @GET
     @Path("/engines")
     @Produces("text/plain")
-    public String getConversion3(@QueryParam("fuel") List<FuelType> fuels) {
+    public String getDefaults(@DefaultValue("GAS") @QueryParam("fuel") List<FuelType> fuels,
+                              @DefaultValue("123") @QueryParam("test") int test) {
         return "fuels " + fuels.stream()
                 .sorted(Comparator.comparing(Enum::toString))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) +
+                " test[" + test + "]";
     }
+
+    @GET
+    @Path("/encode")
+    @Produces("text/plain")
+    public String getEncoded(@Encoded @QueryParam("txt") String txt,
+                             @QueryParam("txt") String txt2) {
+        return "txt[" + txt + "] txt2[" + txt2 + "]";
+    }
+
 }
