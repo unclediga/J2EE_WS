@@ -119,4 +119,40 @@ public class FormTest {
         assertEquals("bean LastName[Ivanov] AGE[35] header[ru]",
                 response.readEntity(String.class));
     }
+
+    @Test
+    public void testConversion() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/hyundai/getz/my;color=BLUE")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("color txt[BLUE] enum[BLUE]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testCollectionParam() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/colors?color=BLUE&color=BLACK&color=GREEN&color=RED")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("colors [BLACK, BLUE, GREEN, RED]",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testParamConverter() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/cars/engines?fuel=diesel&fuel=GAS&fuel=BenzinE")
+                .request("text/plain")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("fuels [BENZINE, DIESEL, GAS]",
+                response.readEntity(String.class));
+    }
 }

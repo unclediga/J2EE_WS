@@ -6,17 +6,27 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Path("/cars")
 public class CarResource {
 
-    static enum Color {
+    public static enum Color {
         BLACK,
         WHITE,
         RED,
         GREEN,
         BLUE
+
+    }
+
+    public enum FuelType {
+        DIESEL,
+        GAS,
+        BENZINE
     }
 
 
@@ -58,8 +68,8 @@ public class CarResource {
         // a/b/c    String       -> return "a/b/c"
         return "p1[" + p1 + "] many[" + many + "] p2[" + p2 + "]";
     }
-
     //"http://localhost:7778/cars/hyundai/getz;color=blue;engine=1_4/interior;color=black/2010")
+
     @GET
     @Path("/{firm}/{model}/interior{mx:.*}/{year}")
     @Produces("text/plain")
@@ -79,8 +89,8 @@ public class CarResource {
                 + "] color[" + colorM + "," + colorI
                 + "] year[" + year + "]";
     }
-
     // http://localhost:7778/cars/huyndai?start=1&size=3
+
     @GET
     @Path("hyundai/getz")
     @Produces("text/plain")
@@ -89,8 +99,8 @@ public class CarResource {
 
         return "query start[" + start + "] size[" + size + "]";
     }
-
     // http://localhost:7778/cars/uriinfo?start=2&size=2
+
     @GET
     @Produces("text/plain")
     public String getUriInfo(@Context UriInfo uriInfo) {
@@ -109,8 +119,8 @@ public class CarResource {
                 "] size[" + queryParameters.getFirst("size") +
                 "] path[" + uriInfo.getPath() + "]";
     }
-
     // http://localhost:7778/cars/uriinfo?start=2&size=2
+
     @GET
     @Path("/hyundai")
     @Produces("text/plain")
@@ -128,5 +138,30 @@ public class CarResource {
         return "uriInfo start[" + queryParameters.getFirst("start") +
                 "] size[" + queryParameters.getFirst("size") +
                 "] path[" + uriInfo.getPath() + "]";
+    }
+
+    @GET
+    @Path("/hyundai/getz/my")
+    @Produces("text/plain")
+    public String getConversion(@MatrixParam("color") String myColorTxt,
+                                @MatrixParam("color") Color myColor) {
+        Color c = Color.valueOf(myColorTxt);
+        return "color txt[" + myColorTxt + "] enum[" + myColor + "]";
+    }
+
+    @GET
+    @Path("/colors")
+    @Produces("text/plain")
+    public String getConversion2(@QueryParam("color") List<Color> availableColors) {
+        return "colors " + availableColors.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
+    }
+
+    @GET
+    @Path("/engines")
+    @Produces("text/plain")
+    public String getConversion3(@QueryParam("fuel") List<FuelType> fuels) {
+        return "fuels " + fuels.stream()
+                .sorted(Comparator.comparing(Enum::toString))
+                .collect(Collectors.toList());
     }
 }

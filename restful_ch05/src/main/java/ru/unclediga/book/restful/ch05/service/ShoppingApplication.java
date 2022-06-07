@@ -13,6 +13,7 @@ public class ShoppingApplication extends Application {
     public ShoppingApplication() {
         singletons.add(new CarResource());
         singletons.add(new CustomerService());
+        singletons.add(new FuelConverterProvider());
     }
 
     @Override
