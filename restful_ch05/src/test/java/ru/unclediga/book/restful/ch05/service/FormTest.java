@@ -2,15 +2,14 @@ package ru.unclediga.book.restful.ch05.service;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.xml.internal.ws.api.message.Header;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -81,11 +80,43 @@ public class FormTest {
                 .headers(headers)
                 .get();
         assertEquals("Referer[localhost] Content-Language[ru]", response.readEntity(String.class));
-
-
-
     }
 
+    @Test
+    public void testCookies() {
+        final Client client = ClientBuilder.newClient();
+        final WebTarget target = client.target("http://localhost:7778/customers");
+        Response response;
+        response = target.path("cookies")
+                .request("text/plain")
+                .cookie("AAA", "cookieA")
+                .cookie("BBB", "111")
+                .cookie("CCC", "222")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
+        assertEquals("cookies:[cookieA, 111, 222]", response.readEntity(String.class));
 
+        response = target.path("cookie")
+                .request("text/plain")
+                .cookie("AA", "cookieA")
+                .cookie("BB", "111")
+                .cookie("CC", "222")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("cookie:AA[cookieA] BB[111] CC[222]", response.readEntity(String.class));
+    }
+
+    @Test
+    public void testBeanParam() {
+        final Client client = ClientBuilder.newClient();
+        final Response response = client
+                .target("http://localhost:7778/customers/bean?last-name=Ivanov&AGE=35")
+                .request("text/plain")
+                .header("Content-Language", "ru")
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("bean LastName[Ivanov] AGE[35] header[ru]",
+                response.readEntity(String.class));
+    }
 }
