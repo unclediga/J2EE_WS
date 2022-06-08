@@ -111,4 +111,30 @@ public class JAXBTest {
         assertEquals(0, response.getLength());
         assertEquals(URI.create(rootTarget.getUri() + "/customers/" + pp.getId()), response.getLocation());
     }
+
+    @Test
+    public void testPutCustomer() {
+
+        Customer customer;
+        Response response;
+        WebTarget target = rootTarget.path("/customers");
+
+
+
+        customer = Customer.getPeterPan();
+        response = target
+                .path("1")
+                .request()
+                .put(Entity.xml(customer));
+
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+
+        customer = Customer.getWendyDarling();
+        response = target
+                .path("2")
+                .request()
+                .put(Entity.xml(customer));
+
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    }
 }

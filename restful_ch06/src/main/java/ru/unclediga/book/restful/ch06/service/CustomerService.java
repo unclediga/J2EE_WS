@@ -11,13 +11,16 @@ import java.net.URI;
 public class CustomerService {
     private final Customer PETER_PEN = Customer.getPeterPan();
     private final Customer WENDY_DARLING = Customer.getWendyDarling();
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_XML)
-    public Customer getCustomer(@PathParam("id") int customer_id){
-        switch (customer_id){
-            case 1: return Customer.getPeterPan();
-            case 2: return Customer.getWendyDarling();
+    public Customer getCustomer(@PathParam("id") int customer_id) {
+        switch (customer_id) {
+            case 1:
+                return Customer.getPeterPan();
+            case 2:
+                return Customer.getWendyDarling();
         }
         return null;
     }
@@ -26,13 +29,13 @@ public class CustomerService {
     @Path("not_rest")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Customer postCustomer_NOT_REST(Customer customer){
-        if (customer == null){
+    public Customer postCustomer_NOT_REST(Customer customer) {
+        if (customer == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        if(customer.getFullName().equals(PETER_PEN.getFullName())){
+        if (customer.getFullName().equals(PETER_PEN.getFullName())) {
             customer.setId(1);
-        }else if(customer.getFullName().equals(WENDY_DARLING.getFullName())){
+        } else if (customer.getFullName().equals(WENDY_DARLING.getFullName())) {
             customer.setId(2);
         }
         return customer;
@@ -40,16 +43,32 @@ public class CustomerService {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response postCustomer_REST(Customer customer){
+    public Response postCustomer_REST(Customer customer) {
         int id = 0;
-        if (customer == null){
+        if (customer == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        if(customer.getFullName().equals(PETER_PEN.getFullName())){
+        if (customer.getFullName().equals(PETER_PEN.getFullName())) {
             id = 1;
-        }else if(customer.getFullName().equals(WENDY_DARLING.getFullName())){
+        } else if (customer.getFullName().equals(WENDY_DARLING.getFullName())) {
             id = 2;
         }
         return Response.created(URI.create("/customers/" + id)).build();
+    }
+
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_XML)
+    public void putCustomer(@PathParam("id") int customer_id, Customer customer) {
+        int id = 0;
+        if (customer == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        if (customer.getFullName().equals(PETER_PEN.getFullName())) {
+            id = 1;
+        } else if (customer.getFullName().equals(WENDY_DARLING.getFullName())) {
+            id = 2;
+        }
+        System.out.println("id[" + id + "] -> [" + (id * 10) + "]");
     }
 }
