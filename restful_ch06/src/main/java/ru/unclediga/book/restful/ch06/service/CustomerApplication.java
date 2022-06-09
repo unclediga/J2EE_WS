@@ -1,6 +1,4 @@
-package ru.unclediga.book.restful.ch04.service;
-
-import ru.unclediga.book.restful.ch06.service.CustomerService;
+package ru.unclediga.book.restful.ch06.service;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;

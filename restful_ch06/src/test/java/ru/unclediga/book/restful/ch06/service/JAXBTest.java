@@ -1,3 +1,5 @@
+package ru.unclediga.book.restful.ch06.service;
+
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.AfterClass;
@@ -5,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import ru.unclediga.book.restful.ch04.service.CustomerApplication;
 import ru.unclediga.book.restful.ch06.domain.Customer;
 
 import javax.ws.rs.client.Client;
