@@ -9,7 +9,6 @@ import static org.junit.Assert.*;
 
 import ru.unclediga.book.restful.ch06.domain.Customer;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
