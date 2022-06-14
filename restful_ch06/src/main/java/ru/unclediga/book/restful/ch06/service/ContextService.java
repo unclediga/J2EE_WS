@@ -11,6 +11,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
+import java.util.Iterator;
+import java.util.Set;
 
 @Path("/fs")
 public class ContextService {
@@ -46,7 +48,18 @@ public class ContextService {
     @Produces(MediaType.TEXT_PLAIN)
     public File getFileContent(@QueryParam("file_name") String file_name,
                                @Context ServletContext context) {
-        final String realPath = context.getRealPath(file_name);
+        System.out.println("context path=" + context.getContextPath());
+        System.out.println("server info=" + context.getServerInfo());
+
+        String realPath = context.getRealPath(file_name);
+        final Set<String> paths = context.getResourcePaths("\\restful_ch06\\target\\restful_ch06\\content.txt");
+        for(String path : paths){
+            System.out.println(path);
+        }
+        if (context.getContextPath().equals("/jersey/test")){
+            realPath = realPath.replace("restful_ch06", "target\\restful_ch06");
+        }
+        System.out.println("realPath=" + realPath);
         final File file = new File(realPath);
         return file;
     }
