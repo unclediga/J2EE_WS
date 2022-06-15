@@ -13,6 +13,7 @@ public class CustomerApplication extends Application {
     public CustomerApplication() {
         single.add(new CustomerService());
         single.add(new ContextService());
+        single.add(new ContentHandlerService());
     }
 
     @Override
