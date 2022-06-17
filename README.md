@@ -19,3 +19,5 @@ from:
      ``` 
    * [Java Rest using JAX-RS and Jetty Maven Plugin Tutorial](https://javapointers.com/java/java-ee/java-rest-using-jax-rs-and-jetty-maven-plugin-tutorial/) 
 
+5. Youtube channel "Java Brains" 
+   * playlist ["Developing RESTful APIs with JAX-RS" (2015)](https://www.youtube.com/watch?v=2QD1sOG8pyU&list=PLqq-6Pq4lTTZh5U8RbdXq0WaYvZBz2rbn) 
