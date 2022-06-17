@@ -1,7 +1,9 @@
 package ru.unclediga.javabrains.jaxrs.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
+@XmlRootElement
 public class Message {
     private long id;
     private String message;
