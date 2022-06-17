@@ -5,6 +5,7 @@ import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -17,5 +18,12 @@ public class MessageResource {
     @Produces(MediaType.APPLICATION_XML)
     public List<Message> getMessages(){
         return service.getAllMessages();
+    }
+
+    @GET
+    @Path("/{messageId}")
+    @Produces(MediaType.APPLICATION_XML)
+    public Message getMessage(@PathParam("messageId") long id){
+        return service.getMessage(id);
     }
 }
