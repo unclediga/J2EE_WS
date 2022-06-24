@@ -1,76 +1,54 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>ru.unclediga.example</groupId>
-    <artifactId>ws</artifactId>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ru.unclediga.example</groupId>
+        <artifactId>ws</artifactId>
+        <version>1.0</version>
+    </parent>
+    <groupId>ru.unclediga.example.ws</groupId>
+    <artifactId>javabrains</artifactId>
     <version>1.0</version>
-  </parent>
-  <groupId>ru.unclediga.example.ws</groupId>
-  <artifactId>javabrains</artifactId>
-  <version>1.0</version>
-  <packaging>war</packaging>
-  <name>javabrains</name>
-  <dependencies>
-    <dependency>
-      <groupId>org.glassfish.jersey.containers</groupId>
-      <artifactId>jersey-container-servlet-core</artifactId>
-      <version>2.14</version>	
-      <!--
-      <exclusions>
-        <exclusion>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.glassfish.jersey.media</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-     -->
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-moxy</artifactId>
-      <version>2.14</version>	
-      <!--
-      <exclusions>
-        <exclusion>
-          <groupId>org.glassfish.jersey.media</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    -->  
-    </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>org.eclipse.persistence.moxy</artifactId>
-      <version>2.4.2</version>	
-      <type>jar</type>
-      <scope>compile</scope> 	
-    </dependency>
-
-      <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-      </dependency>
-
-  </dependencies>
-  <build>
-    <finalName>javabrains</finalName>
+    <packaging>war</packaging>
+    <name>javabrains</name>
+    <properties>
+        <version.jersey>2.24.1</version.jersey>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>javabrains</finalName>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <!-- <version>9.3.27.v20190418</version> -->
-<!--		<version>9.1.6.v20160112</version>-->
-<!--                <version>9.2.30.v20200428</version>-->
-<!--                <version>9.2.12.v20150709</version>-->
-<!--                <version>9.1.2.v20140210</version>-->
                 <version>9.4.13.v20181111</version>
-
                 <configuration>
                     <httpConnector>
                         <port>7778</port>
@@ -80,5 +58,5 @@
                 </configuration>
             </plugin>
         </plugins>
-  </build>
+    </build>
 </project>

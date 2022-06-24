@@ -9,8 +9,10 @@ import java.util.Map;
 public class DatabaseClass {
     private static Map<Long, Message> messages = new HashMap<>();
     private static Map<Long, Profile> profiles = new HashMap<>();
-
-    public DatabaseClass() {
+    
+    static {
+        messages.put(1L, new Message(1L, "Hello, World!", "unclediga"));
+        messages.put(2L, new Message(2L, "Hello, Jersey", "unclediga"));
     }
 
     public static Map<Long, Message> getMessages() {
