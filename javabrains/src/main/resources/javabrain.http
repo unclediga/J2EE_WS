@@ -1,0 +1,32 @@
+GET http://localhost:7778/webapi/myresource
+Accept: text/plain
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+### Failed test: check response status is 406
+
+GET http://localhost:7778/webapi/myresource
+Accept: application/xml
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 406, "Response status is not 406");
+});
+%}
+
+### Get XML
+GET http://localhost:7778/webapi/messages
+Accept: application/xml
+
+> {%
+client.test("Request executed successfully", function() {
+
+    var type = response.contentType.mimeType;
+    client.assert(response.status === 200, "Response status is not 200");
+    client.assert(type === "application/xml", "Expected 'application/xml' but received '" + type + "'");
+});
+%}
