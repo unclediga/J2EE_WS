@@ -26,7 +26,7 @@ public class MessageService {
     }
 
     public Message updateMessage(Message message){
-        return messages.putIfAbsent(message.getId(), message);
+        return messages.put(message.getId(), message);
     }
 
     public Message removeMessage(long id){

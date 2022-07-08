@@ -39,3 +39,11 @@ Accept: application/*
 
 {"id":"","message":"Hello, World!","created":"2022-07-08T20:13:40.801+03:00","author":"unclediga"}
 
+###
+
+PUT http://localhost:7778/webapi/messages/json/1
+Content-Type: application/json
+Accept: application/json
+
+{"id":"","message":"Hello, World!!!!","created":"2022-07-08T20:13:40.801+03:00","author":"unclediga"}
+

@@ -45,4 +45,13 @@ public class MessageResource {
     public Message addMessageJ(Message message){
         return service.addMessage(message);
     }
+
+    @PUT
+    @Path("/json/{messageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Message addMessageJ(Message message, @PathParam("messageId") long id){
+        message.setId(id);
+        return service.updateMessage(message);
+    }
 }
