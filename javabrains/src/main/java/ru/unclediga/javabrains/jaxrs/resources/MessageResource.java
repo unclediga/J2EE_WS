@@ -3,10 +3,7 @@ package ru.unclediga.javabrains.jaxrs.resources;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -39,5 +36,13 @@ public class MessageResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Message getMessageJ(@PathParam("messageId") long id){
         return service.getMessage(id);
+    }
+
+    @POST
+    @Path("/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Message addMessageJ(Message message){
+        return service.addMessage(message);
     }
 }
