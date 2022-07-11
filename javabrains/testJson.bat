@@ -18,6 +18,12 @@ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --d
 echo ...
 echo ...
 echo . . . . . . . . . . .
-echo PUT /webapi/messages/json 
+echo PUT /webapi/messages/json/3 
 echo . . . . . . . . . . .
 curl -X PUT -H "Accept:application/json" -H "Content-Type:application/json" --data @PUT_1.json http://localhost:7778/webapi/messages/json/3
+echo ...
+echo ...
+echo . . . . . . . . . . .
+echo DELETE /webapi/messages/json/2 
+echo . . . . . . . . . . .
+curl -X DELETE http://localhost:7778/webapi/messages/json/2

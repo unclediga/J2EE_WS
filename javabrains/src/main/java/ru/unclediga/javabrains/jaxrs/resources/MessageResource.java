@@ -54,4 +54,10 @@ public class MessageResource {
         message.setId(id);
         return service.updateMessage(message);
     }
+
+    @DELETE
+    @Path("/json/{messageId}")
+    public void addMessageJ(@PathParam("messageId") long id){
+        service.removeMessage(id);
+    }
 }
