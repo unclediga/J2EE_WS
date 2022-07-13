@@ -1,7 +1,12 @@
 package ru.unclediga.javabrains.jaxrs.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Profile {
     private long id;
     private String profileName;
@@ -17,6 +22,14 @@ public class Profile {
         this.profileName = profileName;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Profile(long id, String profileName, String firstName, String lastName, Date created) {
+        this.id = id;
+        this.profileName = profileName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.created = created;
     }
 
     public long getId() {
