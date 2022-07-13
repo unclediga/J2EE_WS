@@ -7,19 +7,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatabaseClass {
-    private static Map<Long, Message> messages = new HashMap<>();
-    private static Map<Long, Profile> profiles = new HashMap<>();
-    
+    private static final Map<Long, Message> messages = new HashMap<>();
+    private static final Map<String, Profile> profiles = new HashMap<>();
+
     static {
-        messages.put(1L, new Message(1L, "Hello, World!", "unclediga"));
-        messages.put(2L, new Message(2L, "Hello, Jersey", "unclediga"));
+        initMessages();
+        initProfiles();
     }
 
     public static Map<Long, Message> getMessages() {
         return messages;
     }
 
-    public static Map<Long, Profile> getProfiles() {
+    public static Map<String, Profile> getProfiles() {
         return profiles;
+    }
+
+    public static void initMessages() {
+        messages.clear();
+        messages.put(1L, new Message(1L, "Hello, World!", "unclediga"));
+        messages.put(2L, new Message(2L, "Hello, Jersey", "unclediga"));
+    }
+
+    public static void initProfiles() {
+        profiles.clear();
+        profiles.put("a1", new Profile(1L, "a1", "A1", "prof"));
+        profiles.put("a2", new Profile(2L, "a2", "A2", "prof"));
+        profiles.put("test", new Profile(3L, "test", "TEST", "prof"));
     }
 }
