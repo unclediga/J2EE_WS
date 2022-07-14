@@ -78,6 +78,20 @@ public class MessageResourceTest {
     }
 
     @Test
+    public void MessagesGetFilterXTest() {
+        DatabaseClass.initMessages();
+        final Response response = client.target(baseUri)
+                .path("/messages/filter")
+                .queryParam("y", 2022)
+                .request(MediaType.APPLICATION_XML)
+                .get();
+        String entity = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertTrue(entity.contains("<id>1</id>"));
+        assertTrue(entity.contains("<id>2</id>"));
+    }
+
+    @Test
     public void MessagesGetX1Test() {
         DatabaseClass.initMessages();
         final Response response = client.target(baseUri)

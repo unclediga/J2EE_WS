@@ -3,6 +3,7 @@ package ru.unclediga.javabrains.jaxrs.data;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.model.Profile;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,8 @@ public class DatabaseClass {
 
     public static void initProfiles() {
         profiles.clear();
-        profiles.put("a1", new Profile(1L, "a1", "A1", "prof"));
-        profiles.put("a2", new Profile(2L, "a2", "A2", "prof"));
-        profiles.put("test", new Profile(3L, "test", "TEST", "prof"));
+        profiles.put("a1", new Profile(1L, "a1", "A1", "prof", new Date()));
+        profiles.put("a2", new Profile(2L, "a2", "A2", "prof", new Date()));
+        profiles.put("test", new Profile(3L, "test", "TEST", "prof", new Date()));
     }
 }

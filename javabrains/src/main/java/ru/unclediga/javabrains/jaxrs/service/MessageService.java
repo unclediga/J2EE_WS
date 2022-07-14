@@ -6,6 +6,8 @@ import ru.unclediga.javabrains.jaxrs.model.Message;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MessageService {
 
@@ -13,6 +15,17 @@ public class MessageService {
 
     public List<Message> getAllMessages() {
         return new ArrayList<>(messages.values());
+    }
+
+    public List<Message> getAllMessages(int year) {
+        if (year > 0){
+            // i don't learn Date() :(
+            return messages
+                    .values()
+                    .stream()
+                    .filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
     }
 
     public Message getMessage(long id){
@@ -29,7 +42,7 @@ public class MessageService {
         return messages.put(message.getId(), message);
     }
 
-    public Message removeMessage(long id){
-        return messages.remove(id);
+    public void removeMessage(long id){
+        messages.remove(id);
     }
 }

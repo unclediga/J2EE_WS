@@ -18,6 +18,16 @@ public class MessageResource {
     }
 
     @GET
+    @Path("/filter")
+    @Produces(MediaType.APPLICATION_XML)
+    public List<Message> getMessagesForYear(@QueryParam("y") int year){
+        if (year > 0){
+            return service.getAllMessages(year);
+        }
+        return service.getAllMessages();
+    }
+
+    @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_XML)
     public Message getMessage(@PathParam("messageId") long id){
