@@ -75,4 +75,26 @@ public class InjectDemoResourceTest {
         assertEquals("Path:http://localhost:7778/injectdemo/context " +
                 "cookie:{name=$Version=1;name=abc}", entity);
     }
+
+    @Test
+    public void getParamsUsingBeanParam() {
+        final Response response = client.target(baseUri)
+                .path("/bean")
+                .matrixParam("mxParam1", "mx1")
+                .matrixParam("mxParam2", "mx2-1", "mx2-2")
+                .request()
+                .header("mySessionId", 123)
+                .cookie("myName", "sweet cookie")
+                .get();
+
+        final String entity = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("[matrix param: mx1]\n" +
+                        "[matrix params: [mx2-1, mx2-2]]\n" +
+                        "[header param: 123]\n" +
+                        "[cookie: sweet cookie]"
+                , entity);
+
+    }
+
 }

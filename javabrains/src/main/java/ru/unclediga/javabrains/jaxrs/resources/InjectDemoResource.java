@@ -22,10 +22,19 @@ public class InjectDemoResource {
     }
 
     @GET
+    @Path("/bean")
+    public String getParamsUsingBeanParam(@BeanParam InjectFilterBean bean) {
+        return "[matrix param: " + bean.getMatrixParam() + "]\n" +
+                "[matrix params: " + bean.getMatrixParams() + "]\n" +
+                "[header param: " + bean.getSid() + "]\n" +
+                "[cookie: " + bean.getCookie() + "]";
+    }
+
+    @GET
     @Path("context")
     public String getParamsUsingContext(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
         final String path = uriInfo.getAbsolutePath().toString();
         final Map<String, Cookie> cookies = headers.getCookies();
-        return "Path:" + path +  " cookie:" + cookies;
+        return "Path:" + path + " cookie:" + cookies;
     }
 }
