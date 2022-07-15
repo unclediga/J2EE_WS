@@ -70,4 +70,10 @@ public class MessageResource {
     public void addMessageJ(@PathParam("messageId") long id){
         service.removeMessage(id);
     }
+
+    @Path("/{messageId}/comments")
+    public CommentResource getComments() {
+        return new CommentResource();
+    }
 }
+
