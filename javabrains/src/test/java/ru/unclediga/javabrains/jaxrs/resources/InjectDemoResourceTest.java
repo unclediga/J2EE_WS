@@ -3,7 +3,9 @@ package ru.unclediga.javabrains.jaxrs.resources;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -11,7 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class InjectDemoResourceTest {
 
@@ -56,5 +58,21 @@ public class InjectDemoResourceTest {
                         "[cookie: sweet cookie]"
                 , entity);
 
+    }
+
+    @Test
+    public void getParamsUsingContext() {
+        final Response response = client.target(baseUri)
+                .path("/context")
+                .request()
+                .cookie("name", "abc")
+                .get();
+
+        final String entity = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        System.out.println(entity);
+
+        assertEquals("Path:http://localhost:7778/injectdemo/context " +
+                "cookie:{name=$Version=1;name=abc}", entity);
     }
 }
