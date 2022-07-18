@@ -4,8 +4,11 @@ import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 @Path("/messages")
@@ -53,11 +56,11 @@ public class MessageResource {
     @Path("/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addMessageJ(Message message){
+    public Response addMessageJ(Message message, @Context UriInfo info){
         final Message newMessage = service.addMessage(message);
+        final URI location = info.getAbsolutePathBuilder().path(String.valueOf(newMessage.getId())).build();
         return Response
-                .status(Response.Status.CREATED)
-                .header("Location", "/messages/json/" + newMessage.getId())
+                .created(location)
                 .build();
     }
 
