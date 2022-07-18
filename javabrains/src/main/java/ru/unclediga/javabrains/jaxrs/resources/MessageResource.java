@@ -1,5 +1,6 @@
 package ru.unclediga.javabrains.jaxrs.resources;
 
+import ru.unclediga.javabrains.jaxrs.exception.DataNotFoundException;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
@@ -35,7 +36,12 @@ public class MessageResource {
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_XML)
     public Message getMessage(@PathParam("messageId") long id){
-        return service.getMessage(id);
+
+        final Message message = service.getMessage(id);
+        if(message == null){
+            throw new DataNotFoundException("Not found id["+ id +"]");
+        }
+        return message;
     }
 
     @GET
