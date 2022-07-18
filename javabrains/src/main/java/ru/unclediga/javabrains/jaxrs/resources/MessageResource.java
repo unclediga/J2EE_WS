@@ -5,6 +5,7 @@ import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/messages")
@@ -52,8 +53,12 @@ public class MessageResource {
     @Path("/json")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Message addMessageJ(Message message){
-        return service.addMessage(message);
+    public Response addMessageJ(Message message){
+        final Message newMessage = service.addMessage(message);
+        return Response
+                .status(Response.Status.CREATED)
+                .header("Location", "/messages/json/" + newMessage.getId())
+                .build();
     }
 
     @PUT

@@ -126,7 +126,8 @@ public class MessageResourceTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json("{\"message\":\"Hello from test!\"}"));
         String entity = response.readEntity(String.class);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+        assertEquals(UriBuilder.fromUri(baseUri).path("/messages/json/3").build(), response.getLocation());
         assertEquals(3, messages.size());
         assertTrue(messages.containsKey(3L));
         assertEquals("Hello from test!", messages.get(3L).getMessage());
