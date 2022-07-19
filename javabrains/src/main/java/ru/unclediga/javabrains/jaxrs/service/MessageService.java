@@ -1,6 +1,7 @@
 package ru.unclediga.javabrains.jaxrs.service;
 
 import ru.unclediga.javabrains.jaxrs.data.DatabaseClass;
+import ru.unclediga.javabrains.jaxrs.model.Comment;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 
 import java.util.ArrayList;
@@ -44,5 +45,17 @@ public class MessageService {
 
     public void removeMessage(long id){
         messages.remove(id);
+    }
+
+    public Comment addComment(long id, Comment comment){
+        final Map<Integer, Comment> comments = messages.get(id).getComments();
+        comment.setId(comments.size() + 1);
+        comments.put((int) comment.getId(), comment);
+        return comment;
+    }
+
+    public void removeComment(long id, int commentId){
+        final Map<Integer, Comment> comments = messages.get(id).getComments();
+        comments.remove(commentId);
     }
 }
