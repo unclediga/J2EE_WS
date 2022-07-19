@@ -2,12 +2,8 @@ package ru.unclediga.javabrains.jaxrs.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.beans.Transient;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
@@ -16,8 +12,7 @@ public class Message {
     private String message;
     private Date created;
     private String author;
-    @XMLTransient
-    private Map<Long, Comment> comments = new HashMap<>();
+    private Map<Integer, Comment> comments = new HashMap<>();
 
     public Message() {
     }
@@ -62,12 +57,16 @@ public class Message {
         this.author = author;
     }
 
-    public Map<Long, Comment> getComments() {
+    public Map<Integer, Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Map<Long, Comment> comments) {
+    public void setComments(Map<Integer, Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Comment> getAllComments() {
+        return new ArrayList<>(comments.values());
     }
 
     @Override
