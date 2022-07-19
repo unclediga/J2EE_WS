@@ -5,7 +5,7 @@ import ru.unclediga.javabrains.jaxrs.model.Comment;
 import ru.unclediga.javabrains.jaxrs.model.ErrorMessage;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MessageService {
                 .status(404)
                 .entity(new ErrorMessage("Message not found",
                         404,
-                        "http:\\\\localhost"))
+                        "http:\\\\localhost\\message"))
                 .build();
 
         final Message message = DatabaseClass.getMessages().get(messageId);
@@ -67,21 +67,14 @@ public class MessageService {
     }
 
     public Comment getComment(long messageId, int commentId) {
-        Response.ResponseBuilder response = Response.status(404);
         final Message message = DatabaseClass.getMessages().get(messageId);
         if (message == null) {
-            throw new WebApplicationException(response.entity(new ErrorMessage(
-                    "Message not found",
-                    404,
-                    "http:\\\\localhost\\message")).build());
+            throw new NotAcceptableException("Message not found");
         }
 
         final Comment comment = message.getComments().get(commentId);
         if (comment == null) {
-            throw new WebApplicationException(response.entity(new ErrorMessage(
-                            "Comment not found",
-                            404,
-                            "http:\\\\localhost\\comments")).build());
+            throw new ForbiddenException("Comment not found");
         }
         return comment;
     }
