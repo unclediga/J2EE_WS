@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.unclediga.javabrains.jaxrs.data.DatabaseClass;
@@ -38,6 +39,11 @@ public class CommentResourceTest {
         server.stop();
     }
 
+    @Before
+    public void startup() throws Exception {
+        DatabaseClass.initMessages();
+    }
+
     @Test
     public void getAllComments() {
         final Response response = client
@@ -48,7 +54,7 @@ public class CommentResourceTest {
                 .get();
         final String entity = response.readEntity(String.class);
         System.out.println(entity);
-//        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test

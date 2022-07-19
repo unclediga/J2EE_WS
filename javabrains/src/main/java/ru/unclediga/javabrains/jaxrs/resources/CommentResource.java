@@ -26,13 +26,13 @@ public class CommentResource {
 
     @GET
     public List<Comment> getComments() {
-        return DatabaseClass.getMessages().get(messageId).getAllComments();
+        return service.getComments(messageId);
     }
 
     @GET
     @Path("/{commentId}")
     public Comment getComment(@PathParam("commentId") int id) {
-        return DatabaseClass.getMessages().get(messageId).getComments().get(id);
+        return service.getComment(messageId, id);
     }
 
     @POST
