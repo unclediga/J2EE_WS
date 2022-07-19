@@ -10,6 +10,7 @@ import org.junit.Test;
 import ru.unclediga.javabrains.jaxrs.data.DatabaseClass;
 import ru.unclediga.javabrains.jaxrs.model.Comment;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -55,6 +56,16 @@ public class CommentResourceTest {
         final String entity = response.readEntity(String.class);
         System.out.println(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void getAllCommentsMessageNotFound() {
+        final Response response = client
+                .target(baseURI)
+                .path("/1000")
+                .path("/comments")
+                .request()
+                .get();
     }
 
     @Test
