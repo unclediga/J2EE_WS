@@ -13,6 +13,7 @@ public class Message {
     private Date created;
     private String author;
     private Map<Integer, Comment> comments = new HashMap<>();
+    private List<Link> links = new ArrayList<>();
 
     public Message() {
     }
@@ -67,6 +68,18 @@ public class Message {
 
     public List<Comment> getAllComments() {
         return new ArrayList<>(comments.values());
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(String url, String rel){
+        links.add(new Link(url, rel));
     }
 
     @Override

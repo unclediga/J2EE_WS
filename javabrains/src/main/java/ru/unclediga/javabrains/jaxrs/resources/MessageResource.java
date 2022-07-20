@@ -5,10 +5,7 @@ import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -35,12 +32,21 @@ public class MessageResource {
     @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_XML)
-    public Message getMessage(@PathParam("messageId") long id){
+    public Message getMessage(@PathParam("messageId") long id, @Context UriInfo info){
 
         final Message message = service.getMessage(id);
         if(message == null){
             throw new DataNotFoundException("Not found id["+ id +"]");
         }
+
+        //final URI uri = info.getAbsolutePathBuilder().build() -> (!!!)full path at once
+        final URI uri = info
+                .getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(String.valueOf(id))
+                .build();
+        message.getLinks().clear();
+        message.addLink(uri.toString(), "self");
         return message;
     }
 
