@@ -38,16 +38,46 @@ public class MessageResource {
         if(message == null){
             throw new DataNotFoundException("Not found id["+ id +"]");
         }
+        final String uriSelf = getUriSelf(message, info);
+        final String uriProfile = getUriProfile(message, info);
+        final String uriComments = getUriComments(message, info);
 
+        message.getLinks().clear();
+        message.addLink(uriSelf, "self");
+        message.addLink(uriProfile, "profile");
+        message.addLink(uriComments, "comments");
+        return message;
+    }
+
+    private String getUriSelf(Message message, UriInfo info) {
         //final URI uri = info.getAbsolutePathBuilder().build() -> (!!!)full path at once
-        final URI uri = info
+        final String uri = info
                 .getBaseUriBuilder()
                 .path(MessageResource.class)
-                .path(String.valueOf(id))
-                .build();
-        message.getLinks().clear();
-        message.addLink(uri.toString(), "self");
-        return message;
+                .path(String.valueOf(message.getId()))
+                .build().toString();
+        return uri;
+    }
+
+    private String getUriProfile(Message message, UriInfo info) {
+        //final URI uri = info.getAbsolutePathBuilder().build() -> (!!!)full path at once
+        final String uri = info
+                .getBaseUriBuilder()
+                .path(ProfileResource.class)
+                .path(message.getAuthor())
+                .build().toString();
+        return uri;
+    }
+    private String getUriComments(Message message, UriInfo info) {
+        //final URI uri = info.getAbsolutePathBuilder().build() -> (!!!)full path at once
+        final String uri = info
+                .getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(MessageResource.class, "getComments")
+                .resolveTemplate("messageId", message.getId())
+                .path(CommentResource.class)
+                .build().toString();
+        return uri;
     }
 
     @GET

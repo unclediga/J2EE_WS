@@ -16,6 +16,7 @@ import java.util.List;
 
  NOTE: The class level @Path annotation is optional for sub resources!
  *******************************************************************/
+@Path("/")
 public class CommentResource {
     private long messageId;
     private final MessageService service = new MessageService();

@@ -27,14 +27,14 @@ public class DatabaseClass {
 
     public static void initMessages() {
         messages.clear();
-        final Message m1 = new Message(1L, "Hello, World!", "unclediga");
+        final Message m1 = new Message(1L, "Hello, World!", "a1");
         final Map<Integer, Comment> comments1 = m1.getComments();
         comments1.put(1, new Comment(1L, "Comment 1-1"));
         comments1.put(2, new Comment(2L, "Comment 1-2"));
         comments1.put(3, new Comment(3L, "Comment 1-3"));
         messages.put(1L, m1);
 
-        final Message m2 = new Message(2L, "Hello, Jersey", "unclediga");
+        final Message m2 = new Message(2L, "Hello, Jersey", "a2");
         final Map<Integer, Comment> comments2 = m2.getComments();
         comments2.put(1, new Comment(1L, "Comment 2-1"));
         comments2.put(2, new Comment(2L, "Comment 2-2"));
