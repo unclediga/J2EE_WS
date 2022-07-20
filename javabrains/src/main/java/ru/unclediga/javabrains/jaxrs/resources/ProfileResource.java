@@ -25,4 +25,17 @@ public class ProfileResource {
     public Profile getProfile(@PathParam("pname") String profileName){
         return service.getProfile(profileName);
     }
+
+    @GET
+    @Path("/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Profile> getProfilesJ(){
+        return service.getAllProfiles();
+    }
+    @GET
+    @Path("/json/{pname}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Profile getProfileJ(@PathParam("pname") String profileName){
+        return service.getProfile(profileName);
+    }
 }

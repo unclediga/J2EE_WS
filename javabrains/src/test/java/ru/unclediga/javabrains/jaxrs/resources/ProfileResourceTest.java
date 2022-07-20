@@ -12,6 +12,7 @@ import ru.unclediga.javabrains.jaxrs.data.DatabaseClass;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -63,5 +64,30 @@ public class ProfileResourceTest {
         assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
         assertTrue(entity.contains("<id>1</id><profileName>a1</profileName>"));
         assertFalse(entity.contains("<id>2</id><profileName>a2</profileName>"));
+    }
+
+    @Test
+    public void profilesGetJTest() {
+        final Response response = baseTarget
+                .path("/profiles/json")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        String entity = response.readEntity(String.class);
+        System.out.println(entity);
+        assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
+//        assertTrue(entity.contains("<id>1</id><profileName>a1</profileName>"));
+//        assertTrue(entity.contains("<id>2</id><profileName>a2</profileName>"));
+    }
+
+    @Test
+    public void profileGetJTest() {
+        final Response response = baseTarget
+                .path("/profiles/json/a1")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        String entity = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
+//        assertTrue(entity.contains("<id>1</id><profileName>a1</profileName>"));
+//        assertFalse(entity.contains("<id>2</id><profileName>a2</profileName>"));
     }
 }
