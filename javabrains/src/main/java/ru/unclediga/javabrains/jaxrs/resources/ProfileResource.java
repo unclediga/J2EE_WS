@@ -15,25 +15,24 @@ public class ProfileResource {
     private final ProfileService service = new ProfileService();
 
     @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public List<Profile> getProfiles(){
+    @Produces(value = {MediaType.APPLICATION_XML, MediaType.TEXT_XML})
+    public List<Profile> getProfiles() {
         return service.getAllProfiles();
     }
     @GET
     @Path("/{pname}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(value={MediaType.APPLICATION_XML,MediaType.TEXT_XML})
     public Profile getProfile(@PathParam("pname") String profileName){
         return service.getProfile(profileName);
     }
 
     @GET
-    @Path("/json")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Profile> getProfilesJ(){
         return service.getAllProfiles();
     }
     @GET
-    @Path("/json/{pname}")
+    @Path("/{pname}")
     @Produces(MediaType.APPLICATION_JSON)
     public Profile getProfileJ(@PathParam("pname") String profileName){
         return service.getProfile(profileName);

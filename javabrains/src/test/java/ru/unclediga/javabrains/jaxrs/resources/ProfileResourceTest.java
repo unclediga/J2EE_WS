@@ -42,12 +42,27 @@ public class ProfileResourceTest {
         DatabaseClass.initProfiles();
     }
 
-    @Test
-    public void profilesGetXTest() {
-        final Response response = baseTarget
+    private Response getResponse(String mediaType) {
+        return baseTarget
                 .path("/profiles")
                 .request()
+                //.request(mediaType)  - equivalence - header("Accept",...)
+                .header("Accept", mediaType)
                 .get();
+    }
+
+    @Test
+    public void profilesGetXTest() {
+        final Response response = getResponse(MediaType.TEXT_XML);
+        String entity = response.readEntity(String.class);
+        assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
+        assertTrue(entity.contains("<id>1</id><profileName>a1</profileName>"));
+        assertTrue(entity.contains("<id>2</id><profileName>a2</profileName>"));
+    }
+
+    @Test
+    public void profilesGetX2Test() {
+        final Response response = getResponse(MediaType.APPLICATION_XML);
         String entity = response.readEntity(String.class);
         assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
         assertTrue(entity.contains("<id>1</id><profileName>a1</profileName>"));
@@ -58,7 +73,7 @@ public class ProfileResourceTest {
     public void profileGetXTest() {
         final Response response = baseTarget
                 .path("/profiles/a1")
-                .request()
+                .request(MediaType.APPLICATION_XML)
                 .get();
         String entity = response.readEntity(String.class);
         assertEquals(Response.Status.OK.getStatusCode(),response.getStatus());
@@ -69,7 +84,7 @@ public class ProfileResourceTest {
     @Test
     public void profilesGetJTest() {
         final Response response = baseTarget
-                .path("/profiles/json")
+                .path("/profiles")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         String entity = response.readEntity(String.class);
@@ -82,7 +97,7 @@ public class ProfileResourceTest {
     @Test
     public void profileGetJTest() {
         final Response response = baseTarget
-                .path("/profiles/json/a1")
+                .path("/profiles/a1")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         String entity = response.readEntity(String.class);
