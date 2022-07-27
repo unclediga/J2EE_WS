@@ -12,9 +12,11 @@ import java.lang.reflect.Type;
 import java.io.OutputStream;
 import java.io.IOException;
 
+import static ru.unclediga.javabrains.jaxrs.MyDayResource.APPLICATION_MYDAY;
+import static ru.unclediga.javabrains.jaxrs.MyDayResource.APPLICATION_MYDAY_TYPE;
 
 @Provider
-@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
+@Produces({MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN, APPLICATION_MYDAY})
 public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
     @Override
     public long getSize(MyDay t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType){
@@ -22,7 +24,9 @@ public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
     }
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType){
-        if(mediaType.equals(MediaType.APPLICATION_XML_TYPE) || mediaType.equals(MediaType.TEXT_PLAIN_TYPE)){
+        if(mediaType.equals(MediaType.APPLICATION_XML_TYPE) 
+            || mediaType.equals(MediaType.TEXT_PLAIN_TYPE)
+            || mediaType.equals(APPLICATION_MYDAY_TYPE)){
             if(type.equals(MyDay.class)){
                 return true;
             }
@@ -38,6 +42,7 @@ public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
                  MediaType mediaType, 
                  MultivaluedMap<String,Object> httpHeaders, 
                  OutputStream entityStream) throws IOException{
+
         if(mediaType.equals(MediaType.APPLICATION_XML_TYPE)){
             entityStream.write(t.toXml().getBytes());
             //entityStream.close();  
@@ -47,6 +52,8 @@ public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
             */ 
         }else if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)){
             entityStream.write(t.toString().getBytes());
+        }else if (mediaType.equals(APPLICATION_MYDAY_TYPE)){
+            entityStream.write(t.toMediaType().getBytes());
         }
     }
 }
