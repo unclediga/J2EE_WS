@@ -24,10 +24,10 @@ public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
     }
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType){
-        if(mediaType.equals(MediaType.APPLICATION_XML_TYPE) 
-            || mediaType.equals(MediaType.TEXT_PLAIN_TYPE)
-            || mediaType.equals(APPLICATION_MYDAY_TYPE)){
-            if(type.equals(MyDay.class)){
+        if(mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE) 
+            || mediaType.isCompatible(MediaType.TEXT_PLAIN_TYPE)
+            || mediaType.isCompatible(APPLICATION_MYDAY_TYPE)){
+            if(MyDay.class.isAssignableFrom(type)){
                 return true;
             }
         }
@@ -43,16 +43,16 @@ public class MyDayMessageBodyWriter implements MessageBodyWriter<MyDay>{
                  MultivaluedMap<String,Object> httpHeaders, 
                  OutputStream entityStream) throws IOException{
 
-        if(mediaType.equals(MediaType.APPLICATION_XML_TYPE)){
+        if(mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE)){
             entityStream.write(t.toXml().getBytes());
             //entityStream.close();  
             /* JavaEE 7 docs : 
              "entityStream - the OutputStream for the HTTP entity. 
              The implementation should not close the output stream."
             */ 
-        }else if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)){
+        }else if (mediaType.isCompatible(MediaType.TEXT_PLAIN_TYPE)){
             entityStream.write(t.toString().getBytes());
-        }else if (mediaType.equals(APPLICATION_MYDAY_TYPE)){
+        }else if (mediaType.isCompatible(APPLICATION_MYDAY_TYPE)){
             entityStream.write(t.toMediaType().getBytes());
         }
     }
