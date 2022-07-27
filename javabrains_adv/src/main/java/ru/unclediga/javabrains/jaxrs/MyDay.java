@@ -25,5 +25,9 @@ public class MyDay{
   public void decDay(){
     day--;
   }
+
+  public String toXml(){
+    return String.format("<myday day=\"%d-%d-%d\"/>",day,month,year);
+  }
 }
 
