@@ -28,7 +28,9 @@
     <module>CARGO</module>
           
     <module>javabrains</module>
-      
+
+    <module>javabrains_adv</module>
+
   </modules>
       
   <properties>
