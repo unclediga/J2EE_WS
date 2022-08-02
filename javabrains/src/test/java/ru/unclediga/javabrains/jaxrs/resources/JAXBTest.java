@@ -1,21 +1,19 @@
 package ru.unclediga.javabrains.jaxrs.resources;
 
-import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.junit.Test;
 import ru.unclediga.javabrains.jaxrs.data.DatabaseClass;
 import ru.unclediga.javabrains.jaxrs.model.Message;
 import ru.unclediga.javabrains.jaxrs.service.MessageService;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import javax.xml.bind.*;
 import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JAXBTest {
 
@@ -43,7 +41,7 @@ public class JAXBTest {
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-        JAXBElement<Message> jaxbElement = new JAXBElement<Message>(new QName(null, "message"), Message.class, m1);
+        JAXBElement<Message> jaxbElement = new JAXBElement<>(new QName(null, "message"), Message.class, m1);
         marshaller.marshal(jaxbElement, writer);
         final String x = writer.toString();
         System.out.println("moxy-1=" + x);
@@ -59,36 +57,37 @@ public class JAXBTest {
     public void testJSON() throws JAXBException {
 
         Message m1 = new Message(1L, "Hello, World!", "unclediga");
-
+        final String x;
         StringWriter writer = new StringWriter();
         System.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
 
-        JAXBContext jaxbContext = null;
+        JAXBContext jaxbContext = JAXBContext.newInstance(Message.class);
         try {
-            jaxbContext = JAXBContext.newInstance(Message.class);
+
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty("eclipselink.media-type", "application/json");
-            JAXBElement<Message> jaxbElement = new JAXBElement<Message>(new QName(null, "message"), Message.class, m1);
+            JAXBElement<Message> jaxbElement = new JAXBElement<>(new QName(null, "message"), Message.class, m1);
             marshaller.marshal(jaxbElement, writer);
-            final String x = writer.toString();
-            System.out.println("moxy-1=\n" + x);
+            x = writer.toString();
+            System.out.println("marshal\n" + x);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
 
 
-//        Unmarshaller unmarshaller = jc.createUnmarshaller();
-//        unmarshaller.setProperty("eclipselink.media-type", "application/json");
-//        unmarshaller.setProperty("eclipselink.json.include-root", false);
-//    StreamSource source = new StreamSource("http://search.twitter.com/search.json?q=jaxb");
-//    JAXBElement<SearchResults> jaxbElement = unmarshaller.unmarshal(source, SearchResults.class);
-//
-//    Result result = new Result();
-//        result.setCreatedAt(new Date());
-//        result.setFromUser("bsmith");
-//        result.setText("You can now use EclipseLink JAXB (MOXy) with JSON :)");
-//        jaxbElement.getValue().getResults().add(result);
+        try {
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            unmarshaller.setProperty("eclipselink.media-type", "application/json");
+            unmarshaller.setProperty("eclipselink.json.include-root", true);
+            StringReader reader = new StringReader(x);
+            StreamSource source = new StreamSource(reader);
+            JAXBElement<Message> jaxbElement = unmarshaller.unmarshal(source, Message.class);
+            Message m = jaxbElement.getValue();
+            System.out.println("unmarshal\n" + m);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
