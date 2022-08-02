@@ -106,6 +106,33 @@ public class MyClientTest {
         String res = baseTarget.path("/AAA/BBB").request(MediaType.TEXT_PLAIN).get(String.class);
         System.out.println("===>");
         System.out.println(res);
-
     }
+
+    @Test
+    public void testClientPathTemplate() {
+        String proxy = System.getenv("PROXYSTR");
+        if(!proxy.isEmpty()){
+            final String[] tokens = Tokenizer.tokenize(proxy, ":");
+            System.setProperty("http.proxyHost", tokens[0]);
+            System.setProperty("http.proxyPort", tokens[1]);
+            System.setProperty("http.auth.ntlm.domain",
+                    System.getenv("USERDOMAIN") + "\\"+ System.getenv("USERNAME"));
+        }
+
+        ClientConfig clientConfig = new ClientConfig()
+                .property(ClientProperties.READ_TIMEOUT, "3000")
+                .property(ClientProperties.CONNECT_TIMEOUT, "3000");
+
+        Client client = ClientBuilder.newClient(clientConfig);
+        WebTarget baseTarget = client.target("http://httpbin.org/anything");
+        WebTarget templateTarget = baseTarget.path("{a}").path("{b}");
+        Response response = templateTarget
+                .resolveTemplate("a","ABC")
+                .resolveTemplate("b","DEF")
+                .request(MediaType.TEXT_PLAIN).get();
+        final String entity = response.readEntity(String.class);
+        assertTrue(entity.contains("\"url\": \"http://httpbin.org/anything/ABC/DEF\""));
+    }
+
+
 }
