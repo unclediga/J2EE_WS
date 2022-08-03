@@ -5,6 +5,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Path("myresource")
 public class MyResource {
@@ -19,6 +22,13 @@ public class MyResource {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public MyData getData() {
         return new MyData("Got it!");
+    }
+
+    @GET
+    @Path("/list")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<MyData> getDataList() {
+        return Arrays.asList(new MyData("item 1"), new MyData("item 2"));
     }
 
     @POST

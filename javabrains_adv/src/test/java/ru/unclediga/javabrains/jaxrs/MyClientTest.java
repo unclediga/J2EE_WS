@@ -1,6 +1,7 @@
 package ru.unclediga.javabrains.jaxrs;
 
 import javax.ws.rs.client.*;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -12,6 +13,8 @@ import org.junit.Test;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientConfig;
+
+import java.util.List;
 
 public class MyClientTest {
     /*
@@ -195,6 +198,17 @@ public class MyClientTest {
         invocation = prepareInvocation(txt, MediaType.APPLICATION_XML_TYPE);
         data = invocation.invoke(MyData.class);
         assertEquals("POST:" + txt, data.getValue());
+    }
+
+    @Test
+    public void testGenericType() {
+
+        List<MyData> list = baseTarget
+                .path("myresource/list")
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<MyData>>() { });
+
+        assertEquals(2,list.size());
     }
 
 }
