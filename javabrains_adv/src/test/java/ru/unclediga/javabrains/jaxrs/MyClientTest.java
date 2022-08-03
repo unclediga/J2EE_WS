@@ -1,10 +1,13 @@
 package ru.unclediga.javabrains.jaxrs;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
 import static org.junit.Assert.*;
 
 import org.glassfish.jersey.internal.util.Tokenizer;
@@ -134,5 +137,45 @@ public class MyClientTest {
         assertTrue(entity.contains("\"url\": \"http://httpbin.org/anything/ABC/DEF\""));
     }
 
+    @Test
+    public void testClientPost() {
+        final String txt = "data for request";
+        MyData d = new MyData(txt);
+        Response response = baseTarget
+                .path("myresource")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(d));
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        MyData data = response.readEntity(MyData.class);
+        assertEquals(data.getValue(), "POST:" + txt);
+    }
+
+    @Test
+    public void testClientPostREST() {
+        final String txt = "data for request";
+        MyData d = new MyData(txt);
+        Response response = baseTarget
+                .path("myresource")
+                .path("rest")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(d));
+
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+        assertEquals(UriBuilder.fromUri(baseTarget.getUri()).path("/myresource/rest").build(), response.getLocation());
+        MyData data = response.readEntity(MyData.class);
+        assertEquals(data.getValue(), "POST:" + txt);
+    }
+
+    @Test
+    public void testClientPut() {
+        final String txt = "data for request";
+        MyData d = new MyData(txt);
+        Response response = baseTarget
+                .path("myresource")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(d));
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    }
 
 }
