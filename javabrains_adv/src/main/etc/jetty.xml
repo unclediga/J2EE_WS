@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+<!--<Set name="dumpAfterStart">false</Set>-->
+<Set name="handler">
+  <New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
+    <Set name="handlers">
+      <Array type="org.eclipse.jetty.server.Handler">
+        <Item>
+          <New id="Contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection"/>
+        </Item>
+        <Item>
+          <New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler"/>
+        </Item>
+        <Item>
+          <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
+        </Item>
+      </Array>
+    </Set>
+  </New>
+</Set>
+<Ref id="RequestLog">
+  <Set name="requestLog">
+    <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
+      <Arg><SystemProperty name="jetty.logs" default="./logs"/>/yyyy_mm_dd.request.log</Arg>
+      <Set name="retainDays">90</Set>
+      <Set name="append">true</Set>
+      <Set name="extended">false</Set>
+      <Set name="LogTimeZone">MSK</Set>
+    </New>
+  </Set>
+</Ref>
+</Configure>

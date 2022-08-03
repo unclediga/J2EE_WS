@@ -175,9 +175,7 @@ public class MyClientTest {
                 .path("myresource")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(d));
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        MyData data = response.readEntity(MyData.class);
-        assertEquals(data.getValue(), "PUT(123):" + txt);
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
 }
