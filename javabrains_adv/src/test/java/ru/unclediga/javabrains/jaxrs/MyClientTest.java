@@ -1,9 +1,6 @@
 package ru.unclediga.javabrains.jaxrs;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Client;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -176,6 +173,28 @@ public class MyClientTest {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(d));
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    }
+
+    private Invocation prepareInvocation(String message, MediaType mediaType) {
+        return baseTarget
+                .path("myresource")
+                .request(mediaType)
+                .buildPost(Entity.json(new MyData(message)));
+
+    }
+
+    @Test
+    public void testInvocation() {
+        final String txt = "data for invocation";
+        Invocation invocation = prepareInvocation(txt, MediaType.APPLICATION_JSON_TYPE);
+        Response response = invocation.invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        MyData data = response.readEntity(MyData.class);
+        assertEquals("POST:" + txt, data.getValue());
+
+        invocation = prepareInvocation(txt, MediaType.APPLICATION_XML_TYPE);
+        data = invocation.invoke(MyData.class);
+        assertEquals("POST:" + txt, data.getValue());
     }
 
 }
