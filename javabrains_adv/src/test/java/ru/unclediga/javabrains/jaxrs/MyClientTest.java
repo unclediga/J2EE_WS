@@ -43,9 +43,9 @@ public class MyClientTest {
         Response response = client.target("http://oasboss3/docs.html")
                             .request(MediaType.TEXT_PLAIN)
                             .get();
-        
+
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-                              
+
     }
 
     @Test
@@ -56,9 +56,9 @@ public class MyClientTest {
                             .path("myresource")
                             .request()
                             .get();
-        
+
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        String stringData = response.readEntity(String.class);                            
+        String stringData = response.readEntity(String.class);
         System.out.println("STRING[" + stringData + "]");
 
         response = baseTarget
@@ -216,21 +216,31 @@ public class MyClientTest {
 
         Response response;
         final String encoded = Base64.getEncoder().encodeToString("user:password".getBytes());
-        final WebTarget withFilter = baseTarget.register(AuthFilter.class);   // !!! Do not forget !!!
 
-        response = withFilter
+        response = baseTarget
                 .path("secured")
                 .request(MediaType.TEXT_PLAIN)
-                .header("Authorization", encoded)
+                .header("Authorization", "Basic " + encoded)
                 .get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         String message = response.readEntity(String.class);
         assertEquals("Hello from Authority", message);
 
-        response = withFilter
+        response = baseTarget
                 .path("secured")
                 .request(MediaType.TEXT_PLAIN)
                 .get();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testInterceptor() {
+        Response response = baseTarget
+                .path("myresource")
+                .request(MediaType.TEXT_PLAIN)
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        String message = response.readEntity(String.class);
+        assertEquals("Intercepted:Got it!", message);
     }
 }
