@@ -1,20 +1,20 @@
 package ru.unclediga.javabrains.jaxrs;
 
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.internal.util.Tokenizer;
+import org.junit.Test;
+
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
-import static org.junit.Assert.*;
-
-import org.glassfish.jersey.internal.util.Tokenizer;
-import org.junit.Test;
-
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.ClientConfig;
-
+import java.util.Base64;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MyClientTest {
     /*
@@ -211,4 +211,26 @@ public class MyClientTest {
         assertEquals(2,list.size());
     }
 
+    @Test
+    public void testAuthorization() {
+
+        Response response;
+        final String encoded = Base64.getEncoder().encodeToString("user:password".getBytes());
+        final WebTarget withFilter = baseTarget.register(AuthFilter.class);   // !!! Do not forget !!!
+
+        response = withFilter
+                .path("secured")
+                .request(MediaType.TEXT_PLAIN)
+                .header("Authorization", encoded)
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        String message = response.readEntity(String.class);
+        assertEquals("Hello from Authority", message);
+
+        response = withFilter
+                .path("secured")
+                .request(MediaType.TEXT_PLAIN)
+                .get();
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+    }
 }
