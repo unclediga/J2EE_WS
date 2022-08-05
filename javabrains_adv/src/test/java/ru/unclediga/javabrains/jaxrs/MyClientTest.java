@@ -5,7 +5,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.junit.Test;
 
-import javax.annotation.Priority;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -14,8 +13,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.Base64;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MyClientTest {
     /*
@@ -243,5 +241,28 @@ public class MyClientTest {
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         String message = response.readEntity(String.class);
         assertEquals("Intercepted:Got it!", message);
+    }
+
+    @Test
+    public void testRegisteredFilter() {
+        Response response;
+        response = baseTarget
+                .path("myresource")
+                .request(MediaType.TEXT_PLAIN)
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(RegisteredFilter.CLIENT_HEADER_NAME));
+        assertNull(response.getHeaderString(RegisteredFilter.CONTAINER_HEADER_NAME));
+
+        response = baseTarget
+                .register(RegisteredFilter.class)
+                .path("myresource")
+                .request(MediaType.TEXT_PLAIN)
+                .get();
+        System.out.print("keys -> " + response.getHeaders().keySet());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(RegisteredFilter.CONTAINER_HEADER_NAME));
+        assertNotNull(response.getHeaderString(RegisteredFilter.CLIENT_HEADER_NAME));
+
     }
 }

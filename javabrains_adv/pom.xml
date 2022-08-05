@@ -30,6 +30,14 @@
             <artifactId>jersey-media-moxy</artifactId>
             <version>${version.jersey}</version>
         </dependency>
+
+        <!-- Embedded Server -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
