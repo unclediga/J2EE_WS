@@ -5,6 +5,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.junit.Test;
 
+import javax.annotation.Priority;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -54,7 +55,7 @@ public class MyClientTest {
 
         Response response = baseTarget
                             .path("myresource")
-                            .request()
+                            .request(MediaType.TEXT_PLAIN)
                             .get();
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -63,7 +64,7 @@ public class MyClientTest {
 
         response = baseTarget
                 .path("myresource")
-                .request()
+                .request(MediaType.APPLICATION_XML)
                 .get();
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

@@ -16,13 +16,13 @@ public class MyInterceptor implements WriterInterceptor {
 
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws WebApplicationException, IOException {
-        if (context.getMediaType().isCompatible(MediaType.TEXT_PLAIN_TYPE)) {
-            if (info.getRequestUri().getPath().endsWith("myresource")) {
+
+        if (info.getRequestUri().getPath().endsWith("myresource")
+                && context.getMediaType().isCompatible(MediaType.TEXT_PLAIN_TYPE)) {
                 String message = (String) context.getEntity();
                 context.setEntity("Intercepted:" + message);
                 context.proceed();
-            }
-        }else {
+        } else {
             context.proceed();
         }
     }
