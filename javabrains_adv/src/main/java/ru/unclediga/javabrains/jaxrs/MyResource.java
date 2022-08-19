@@ -36,6 +36,7 @@ public class MyResource {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public MyData insData(MyData data) {
         data.setValue("POST:" + data.getValue());
+        data.setDeviceId("POST:" + data.getDeviceId());
         return data;
     }
 
